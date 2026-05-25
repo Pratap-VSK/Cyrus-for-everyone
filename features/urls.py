@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     # Navigation Routes (Frontend Pages)
-    path('', views.calculator_page, name='home'),  # Default home page
+    path('', views.home_page, name='home'),
     path('calculator/', views.calculator_page, name='calculator'),
     path('height/', views.height_page, name='height'),
     path('distance/', views.distance_page, name='distance'),

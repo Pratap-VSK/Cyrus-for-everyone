@@ -6,6 +6,9 @@ from django.views.decorators.csrf import csrf_exempt
 # ==========================================
 # 1. SMART CALCULATOR VIEWS
 # ==========================================
+def home_page(request):
+    return render(request, 'content/home.html')
+
 def calculator_page(request):
     # Renders the calculator UI from the content folder
     return render(request, 'content/calculator.html')

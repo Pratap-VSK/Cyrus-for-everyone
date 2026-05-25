@@ -2,207 +2,284 @@
 
 {% block content %}
 <style>
-    /* Transparent Glassmorphism Box */
+    /* =========================================
+       1. DESKTOP / DEFAULT LAYOUT
+       ========================================= */
+    .page-wrapper {
+        display: flex;
+        width: 100%;
+        max-width: 950px;
+        gap: 40px;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    /* Converter Container (Glassmorphism) */
     .conv-container {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(46, 213, 115, 0.3);
+        border: 1px solid rgba(46, 213, 115, 0.3); /* Green theme for height */
         border-radius: 20px;
-        padding: 40px 30px;
-        width: 100%;
-        max-width: 500px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        padding: 30px;
+        width: 400px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(46, 213, 115, 0.1);
         text-align: center;
+        flex-shrink: 0;
     }
 
-    .conv-title {
-        color: #ffa502; /* Yellow color */
-        font-family: 'Wallpoet', cursive;
-        letter-spacing: 2px;
-        margin-bottom: 30px;
-        font-size: 1.5rem;
-        text-shadow: 0 0 10px rgba(255, 165, 2, 0.5);
+    .conv-title { 
+        color: #2ed573; 
+        font-family: 'Wallpoet', cursive; 
+        margin-bottom: 20px; 
+        font-size: 1.6rem; 
+        text-shadow: 0 0 10px rgba(46, 213, 115, 0.5); 
+        text-transform: uppercase;
     }
 
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 20px;
+    .section-label { 
+        color: #a4b0be; 
+        font-size: 0.85rem; 
+        font-weight: 600; 
+        letter-spacing: 1px; 
+        margin-bottom: 8px; 
+        display: block; 
         text-align: left;
     }
 
-    .input-group label {
-        color: #a4b0be;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-
-    .input-row {
-        display: flex;
-        gap: 10px;
-    }
-
-    .conv-input, .conv-select {
+    .input-box, .conv-select {
         background: rgba(0, 0, 0, 0.4);
         border: 1px solid rgba(255, 255, 255, 0.2);
         color: white;
-        font-size: 1.2rem;
         font-family: 'Poppins', sans-serif;
-        padding: 15px;
-        border-radius: 10px;
-        outline: none;
-    }
-
-    .conv-input { flex: 1; }
-    .conv-select { width: 130px; cursor: pointer; }
-
-    .conv-input:focus, .conv-select:focus {
-        border-color: #2ed573;
-        box-shadow: 0 0 10px rgba(46, 213, 115, 0.3);
-    }
-
-    .conv-select option { background: #0a1423; color: white; }
-
-    /* Swap Button */
-    .swap-btn {
-        background: rgba(255, 165, 2, 0.1);
-        border: 1px solid rgba(255, 165, 2, 0.4);
-        color: #ffa502;
-        font-size: 1.5rem;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        cursor: pointer;
-        margin: 10px auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: all 0.3s;
-    }
-
-    .swap-btn:hover {
-        background: #ffa502;
-        color: #000;
-        transform: rotate(180deg);
-    }
-
-    /* Output Result Box */
-    .result-box {
-        margin-top: 25px;
-        background: rgba(46, 213, 115, 0.1);
-        border: 2px solid #2ed573;
-        padding: 20px;
+        font-size: 1.1rem;
+        padding: 12px 15px;
         border-radius: 12px;
+        width: 100%;
+        outline: none;
+        transition: 0.3s;
+        box-shadow: inset 0 3px 10px rgba(0,0,0,0.5);
+    }
+    
+    .input-box:focus, .conv-select:focus {
+        border-color: #2ed573;
+        box-shadow: inset 0 3px 10px rgba(0,0,0,0.5), 0 0 8px rgba(46, 213, 115, 0.3);
+    }
+
+    .conv-select option { 
+        background: #0a1423; 
+        color: white; 
+    }
+
+    /* Result Output Area */
+    .result-box {
+        background: rgba(46, 213, 115, 0.05); 
+        border: 1px dashed rgba(46, 213, 115, 0.4); 
+        padding: 20px; 
+        border-radius: 12px; 
+        text-align: center; 
+        margin: 20px 0;
     }
 
     .result-value {
-        color: #2ed573;
-        font-size: 2.5rem;
+        color: #2ed573; 
+        font-size: 2.2rem; 
         font-weight: 800;
-        text-shadow: 0 0 10px rgba(46, 213, 115, 0.4);
+        text-shadow: 0 0 10px rgba(46, 213, 115, 0.3);
     }
 
-    .result-unit { color: white; font-size: 1.2rem; opacity: 0.8; }
+    .result-unit {
+        color: #cbd5e1; 
+        font-size: 0.9rem;
+    }
+
+    .btn-submit { 
+        width: 100%;
+        padding: 15px; 
+        background: #2ed573; 
+        color: #000; 
+        border: none; 
+        border-radius: 12px; 
+        font-weight: 800; 
+        font-size: 1.1rem;
+        cursor: pointer; 
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(46, 213, 115, 0.3);
+    }
+
+    .btn-submit:hover { 
+        background: #27ae60; 
+        color: #fff; 
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
+    }
+
+    /* Attractive Right Side Visual */
+    .attractive-visual {
+        flex: 1;
+        background: linear-gradient(135deg, rgba(46, 213, 115, 0.05), rgba(0,0,0,0.4));
+        border: 1px solid rgba(46, 213, 115, 0.2);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .attractive-visual h3 { 
+        color: #2ed573; 
+        font-size: 1.8rem; 
+        font-family: 'Wallpoet', cursive; 
+        margin-bottom: 15px; 
+        position: relative;
+        z-index: 2;
+    }
+    
+    .attractive-visual p { 
+        color: #a4b0be; 
+        font-size: 1.05rem; 
+        line-height: 1.7; 
+        margin-bottom: 25px; 
+        position: relative;
+        z-index: 2;
+    }
+
+    .visual-icon { 
+        font-size: 4.5rem; 
+        color: rgba(46, 213, 115, 0.2); 
+        text-align: right; 
+        position: relative;
+        z-index: 2;
+    }
+
+    .visual-glow {
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(46, 213, 115, 0.2) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    /* =========================================
+       2. RESPONSIVE / MOBILE LAYOUT
+       ========================================= */
+    @media (max-width: 850px) {
+        .page-wrapper { gap: 20px; }
+        .attractive-visual { padding: 20px; }
+        .attractive-visual h3 { font-size: 1.5rem; }
+    }
+
+    @media (max-width: 768px) {
+        .page-wrapper {
+            flex-direction: column; 
+            width: 100%;
+        }
+
+        /* Hide the visual card on mobile */
+        .attractive-visual { display: none !important; }
+
+        /* Make converter full width */
+        .conv-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px; 
+            margin: 0 auto;
+        }
+    }
 </style>
 
-<div class="conv-container">
-    <h2 class="conv-title">HEIGHT CONVERTER</h2>
-    
-    <div class="input-group">
-        <label>ENTER HEIGHT VALUE</label>
-        <div class="input-row">
-            <input type="number" id="heightValue" class="conv-input" placeholder="e.g. 170" value="1" oninput="sendToBackend()">
-            <select id="heightFrom" class="conv-select" onchange="sendToBackend()">
-                <option value="mm">mm</option>
-                <option value="cm" selected>cm</option>
-                <option value="m">Meter</option>
-                <option value="in">Inch</option>
-                <option value="ft">Feet</option>
-                <option value="yd">Yard</option>
-            </select>
+<div class="page-wrapper">
+    <div class="conv-container">
+        <h2 class="conv-title">HEIGHT CONVERTER</h2>
+        
+        <div style="margin-bottom: 20px;">
+            <label class="section-label">INPUT MEASUREMENT</label>
+            <input type="number" step="any" id="heightValue" class="input-box" placeholder="e.g. 175" style="text-align: center; font-size: 1.5rem;">
         </div>
+
+        <div style="display: flex; gap: 15px; margin-bottom: 10px;">
+            <div style="flex: 1;">
+                <label class="section-label">FROM UNIT</label>
+                <select id="heightFrom" class="conv-select">
+                    <option value="mm">Millimeter (mm)</option>
+                    <option value="cm" selected>Centimeter (cm)</option>
+                    <option value="m">Meter (m)</option>
+                    <option value="in">Inch (in)</option>
+                    <option value="ft">Feet (ft)</option>
+                    <option value="yd">Yard (yd)</option>
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label class="section-label">TO UNIT</label>
+                <select id="heightTo" class="conv-select">
+                    <option value="mm">Millimeter (mm)</option>
+                    <option value="cm">Centimeter (cm)</option>
+                    <option value="m">Meter (m)</option>
+                    <option value="in">Inch (in)</option>
+                    <option value="ft" selected>Feet (ft)</option>
+                    <option value="yd">Yard (yd)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="result-box">
+            <div id="heightResult" class="result-value">--</div>
+            <div id="heightUnitLabel" class="result-unit">Target Unit</div>
+        </div>
+
+        <button onclick="processHeight()" class="btn-submit">CONVERT HEIGHT</button>
     </div>
 
-    <button class="swap-btn" onclick="swapUnits()">
-        <i class="fas fa-exchange-alt"></i>
-    </button>
-
-    <div class="input-group" style="margin-bottom: 0;">
-        <label>CONVERT TO</label>
-        <div class="input-row">
-            <select id="heightTo" class="conv-select" style="width: 100%;" onchange="sendToBackend()">
-                <option value="mm">mm</option>
-                <option value="cm">cm</option>
-                <option value="m" selected>Meter</option>
-                <option value="in">Inch</option>
-                <option value="ft">Feet</option>
-                <option value="yd">Yard</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="result-box">
-        <div class="result-value" id="heightResult">0.01</div>
-        <div class="result-unit" id="heightUnitLabel">Meter</div>
+    <div class="attractive-visual">
+        <div class="visual-glow"></div>
+        <h3>Precision Scaling</h3>
+        <p>Seamlessly translate physical dimensions across metric and imperial systems. Perfect for architectural mapping and personal health metrics.</p>
+        <div class="visual-icon"><i class="fas fa-ruler-vertical"></i></div>
     </div>
 </div>
 
 <script>
-    // Yeh function backend URL '/calculate-height/' ko data bhejega
-    async function sendToBackend() {
+    async function processHeight() {
         const val = document.getElementById('heightValue').value;
-        const fromUnit = document.getElementById('heightFrom').value;
-        const toUnit = document.getElementById('heightTo').value;
-        const outputLabel = document.getElementById('heightTo').options[document.getElementById('heightTo').selectedIndex].text;
-
-        if (val === '') {
+        const from = document.getElementById('heightFrom').value;
+        const to = document.getElementById('heightTo').value;
+        
+        // Get the visible text of the selected option to display in the result box
+        const toSelect = document.getElementById('heightTo');
+        const toLabel = toSelect.options[toSelect.selectedIndex].text;
+        
+        if(!val) {
             document.getElementById('heightResult').innerText = "0";
-            document.getElementById('heightUnitLabel').innerText = outputLabel;
             return;
         }
-
+        
         try {
-            // Django view ko fetch request bhej rahe hain
-            const response = await fetch('/calculate-height/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    value: val,
-                    from_unit: fromUnit,
-                    to_unit: toUnit
-                })
+            // Send Data to Django Backend API
+            const res = await fetch('/calculate-height/', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value: val, from_unit: from, to_unit: to })
             });
-
-            const data = await response.json();
-
+            
+            const data = await res.json();
+            
             if (data.result !== undefined) {
                 document.getElementById('heightResult').innerText = data.result;
-                document.getElementById('heightUnitLabel').innerText = outputLabel;
+                document.getElementById('heightUnitLabel').innerText = toLabel;
             } else {
-                document.getElementById('heightResult').innerText = "Error";
+                document.getElementById('heightResult').innerText = 'Error';
             }
-        } catch (error) {
-            document.getElementById('heightResult').innerText = "Server Error";
-            console.error("Backend communication error:", error);
+        } catch (e) { 
+            console.error("Conversion failed", e);
+            document.getElementById('heightResult').innerText = 'Error'; 
         }
     }
-
-    function swapUnits() {
-        const fromSelect = document.getElementById('heightFrom');
-        const toSelect = document.getElementById('heightTo');
-        
-        const temp = fromSelect.value;
-        fromSelect.value = toSelect.value;
-        toSelect.value = temp;
-        
-        sendToBackend();
-    }
-
-    // Page load hote hi pehli baar calculation auto chal jaye
-    window.onload = sendToBackend;
 </script>
 {% endblock %}

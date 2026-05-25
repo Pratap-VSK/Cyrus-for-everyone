@@ -2,299 +2,303 @@
 
 {% block content %}
 <style>
-    /* Main Container with Emerald Green Finance Theme */
+    /* =========================================
+       1. DESKTOP / DEFAULT LAYOUT (COMPACT)
+       ========================================= */
+    .page-wrapper {
+        display: flex;
+        width: 100%;
+        max-width: 950px;
+        gap: 30px; /* Thoda gap kam kiya taaki screen pe fit aaye */
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    /* Converter Container (Glassmorphism) - Compact Padding */
     .conv-container {
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(46, 213, 115, 0.3);
+        border: 1px solid rgba(16, 185, 129, 0.3); /* Green theme for Finance */
         border-radius: 20px;
-        padding: 40px 30px;
-        width: 100%;
-        max-width: 550px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(46, 213, 115, 0.1);
+        padding: 25px; /* Padding reduced to fit screen */
+        width: 400px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(16, 185, 129, 0.1);
         text-align: center;
-        display: flex;
-        flex-direction: column;
-        gap: 22px;
+        flex-shrink: 0;
     }
 
-    .conv-title {
-        color: #2ed573;
-        font-family: 'Wallpoet', cursive;
-        letter-spacing: 2px;
-        font-size: 1.6rem;
-        margin: 0;
-        text-shadow: 0 0 10px rgba(46, 213, 115, 0.5);
+    .conv-title { 
+        color: #10b981; 
+        font-family: 'Wallpoet', cursive; 
+        margin-bottom: 15px; /* Margin reduced */
+        font-size: 1.5rem; 
+        text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); 
+        text-transform: uppercase;
     }
 
-    .section-label {
-        color: #a4b0be;
-        font-size: 0.85rem;
-        font-weight: 600;
-        letter-spacing: 1.5px;
+    .section-label { 
+        color: #a4b0be; 
+        font-size: 0.8rem; 
+        font-weight: 600; 
+        letter-spacing: 1px; 
+        margin-bottom: 5px; 
+        display: block; 
         text-align: left;
-        margin-bottom: 8px;
-        display: block;
     }
 
-    /* Step 1: Base Amount Input */
-    .input-box {
+    /* Inputs tightened for space */
+    .input-box, .conv-select {
         background: rgba(0, 0, 0, 0.4);
         border: 1px solid rgba(255, 255, 255, 0.2);
         color: white;
-        font-size: 1.5rem;
         font-family: 'Poppins', sans-serif;
-        padding: 12px 20px;
-        border-radius: 12px;
-        width: 100%;
-        outline: none;
-        transition: all 0.3s;
-        text-align: center;
-    }
-
-    .input-box:focus {
-        border-color: #2ed573;
-        box-shadow: 0 0 15px rgba(46, 213, 115, 0.3);
-    }
-
-    /* Step 2: Operational Options Matrix */
-    .options-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-    }
-
-    .conv-select {
-        background: rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
         font-size: 1rem;
-        padding: 12px;
-        border-radius: 10px;
+        padding: 10px 15px; /* Reduced padding */
+        border-radius: 12px;
         width: 100%;
         outline: none;
-        cursor: pointer;
         transition: 0.3s;
+        box-shadow: inset 0 3px 10px rgba(0,0,0,0.5);
+    }
+    
+    .input-box:focus, .conv-select:focus {
+        border-color: #10b981;
+        box-shadow: inset 0 3px 10px rgba(0,0,0,0.5), 0 0 8px rgba(16, 185, 129, 0.3);
     }
 
-    .conv-select:focus { border-color: #2ed573; }
-    .conv-select option { background: #0a1423; color: white; }
+    .conv-select option { 
+        background: #0a1423; 
+        color: white; 
+    }
 
-    /* Step 3: Detailed Corporate Invoice Output Box */
-    .output-section {
-        background: rgba(46, 213, 115, 0.04);
-        border: 1px solid rgba(46, 213, 115, 0.2);
-        padding: 20px;
-        border-radius: 12px;
+    /* Compact Invoice / Result Area */
+    .result-box {
+        background: rgba(16, 185, 129, 0.05); 
+        border: 1px dashed rgba(16, 185, 129, 0.4); 
+        padding: 15px; /* Reduced padding */
+        border-radius: 12px; 
+        margin: 15px 0; /* Reduced margin */
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 8px; /* Gap between invoice rows */
     }
 
     .invoice-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-        padding-bottom: 8px;
+        font-size: 0.95rem;
+        color: #cbd5e1;
     }
 
-    .invoice-row:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-        margin-top: 5px;
-    }
-
-    .invoice-label {
-        color: #a4b0be;
-        font-size: 0.9rem;
-    }
-
-    .invoice-value {
+    .invoice-val {
         font-weight: 600;
-        font-size: 1.1rem;
         color: white;
     }
 
-    /* Grand Total Highlight */
-    .grand-total-label {
-        color: #2ed573;
+    .invoice-total {
+        border-top: 1px solid rgba(16, 185, 129, 0.3);
+        padding-top: 8px;
+        margin-top: 4px;
+        font-size: 1.3rem;
         font-weight: 800;
-        font-size: 1.1rem;
+        color: #10b981;
     }
 
-    .grand-total-value {
-        color: #2ed573;
-        font-size: 1.8rem;
-        font-weight: 800;
-        text-shadow: 0 0 15px rgba(46, 213, 115, 0.4);
-    }
-
-    /* Step 4: Process Button */
-    .process-btn {
-        background: linear-gradient(145deg, rgba(46, 213, 115, 0.1), rgba(0, 0, 0, 0.3));
-        border: 1px solid #2ed573;
-        color: #2ed573;
-        font-size: 1.2rem;
-        font-weight: 800;
-        letter-spacing: 2px;
-        padding: 16px;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    .btn-submit { 
         width: 100%;
+        padding: 12px; /* Reduced padding */
+        background: #10b981; 
+        color: #000; 
+        border: none; 
+        border-radius: 12px; 
+        font-weight: 800; 
+        font-size: 1.1rem;
+        cursor: pointer; 
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
     }
 
-    .process-btn:hover {
-        background: rgba(46, 213, 115, 0.2);
-        color: #ffffff;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4), inset 0 0 10px rgba(46, 213, 115, 0.2);
+    .btn-submit:hover { 
+        background: #059669; 
+        color: #fff; 
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
     }
 
-    @media (max-width: 500px) {
-        .options-grid { grid-template-columns: 1fr; gap: 15px; }
+    /* Attractive Right Side Visual */
+    .attractive-visual {
+        flex: 1;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(0,0,0,0.4));
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .attractive-visual h3 { 
+        color: #10b981; 
+        font-size: 1.7rem; 
+        font-family: 'Wallpoet', cursive; 
+        margin-bottom: 12px; 
+        position: relative;
+        z-index: 2;
+    }
+    
+    .attractive-visual p { 
+        color: #a4b0be; 
+        font-size: 1rem; 
+        line-height: 1.6; 
+        margin-bottom: 20px; 
+        position: relative;
+        z-index: 2;
+    }
+
+    .visual-icon { 
+        font-size: 4.5rem; 
+        color: rgba(16, 185, 129, 0.2); 
+        text-align: right; 
+        position: relative;
+        z-index: 2;
+    }
+
+    .visual-glow {
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    /* =========================================
+       2. RESPONSIVE / MOBILE LAYOUT
+       ========================================= */
+    @media (max-width: 850px) {
+        .page-wrapper { gap: 20px; }
+        .attractive-visual { padding: 20px; }
+        .attractive-visual h3 { font-size: 1.5rem; }
+    }
+
+    @media (max-width: 768px) {
+        .page-wrapper {
+            flex-direction: column; 
+            width: 100%;
+        }
+
+        /* Hide the visual card on mobile */
+        .attractive-visual { display: none !important; }
+
+        /* Make converter full width */
+        .conv-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px; 
+            margin: 0 auto;
+        }
     }
 </style>
 
-<div class="conv-container">
-    <h2 class="conv-title">GST TAX CALCULATOR</h2>
-    
-    <div>
-        <label class="section-label">1. ENTER AMOUNT (₹)</label>
-        <input type="number" step="any" id="gstAmount" class="input-box" placeholder="e.g. 5000.00">
-    </div>
-
-    <div class="options-grid">
-        <div>
-            <label class="section-label">TAX SLAB</label>
-            <select id="gstRate" class="conv-select">
-                <option value="5">5% (Essentials)</option>
-                <option value="12">12% (Standard I)</option>
-                <option value="18" selected>18% (Standard II)</option>
-                <option value="28">28% (Luxury/Demerit)</option>
-            </select>
-        </div>
+<div class="page-wrapper">
+    <div class="conv-container">
+        <h2 class="conv-title">GST TAX ENGINE</h2>
         
-        <div>
-            <label class="section-label">GST TYPE</label>
-            <select id="gstAction" class="conv-select">
-                <option value="add" selected>GST Exclusive (+)</option>
-                <option value="remove">GST Inclusive (-)</option>
-            </select>
+        <div style="margin-bottom: 15px;">
+            <label class="section-label">GROSS AMOUNT (₹)</label>
+            <input type="number" step="any" id="gstAmount" class="input-box" placeholder="e.g. 5000" style="text-align: center; font-size: 1.3rem;">
         </div>
 
-        <div>
-            <label class="section-label">SUPPLY TYPE</label>
-            <select id="supplyType" class="conv-select">
-                <option value="intra" selected>Intra-State (CGST+SGST)</option>
-                <option value="inter">Inter-State (IGST)</option>
-            </select>
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <div style="flex: 1;">
+                <label class="section-label">TAX SLAB</label>
+                <select id="gstRate" class="conv-select">
+                    <option value="5">5% GST</option>
+                    <option value="12">12% GST</option>
+                    <option value="18" selected>18% GST</option>
+                    <option value="28">28% GST</option>
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label class="section-label">CALC TYPE</label>
+                <select id="gstAction" class="conv-select">
+                    <option value="add" selected>Exclusive (+)</option>
+                    <option value="remove">Inclusive (-)</option>
+                </select>
+            </div>
         </div>
+
+        <div class="result-box">
+            <div class="invoice-row">
+                <span>Base Price:</span>
+                <span class="invoice-val" id="lblBase">₹0.00</span>
+            </div>
+            <div class="invoice-row" style="color: #10b981;">
+                <span>CGST:</span>
+                <span class="invoice-val" id="lblCGST" style="color: #10b981;">₹0.00</span>
+            </div>
+            <div class="invoice-row" style="color: #10b981;">
+                <span>SGST:</span>
+                <span class="invoice-val" id="lblSGST" style="color: #10b981;">₹0.00</span>
+            </div>
+            <div class="invoice-row invoice-total">
+                <span>Total:</span>
+                <span id="lblTotal">₹0.00</span>
+            </div>
+        </div>
+
+        <button onclick="processGST()" class="btn-submit">GENERATE LEDGER</button>
     </div>
 
-    <div class="output-section">
-        <label class="section-label" style="text-align: center; color: #2ed573; margin-bottom: 5px;">ACCOUNTING INVOICE SUMMARY</label>
-        
-        <div class="invoice-row">
-            <span class="invoice-label">Net Product Price (Base):</span>
-            <span class="invoice-value" id="lblBase">₹0.00</span>
-        </div>
-        <div class="invoice-row">
-            <span class="invoice-label">Total GST Amount Taxed:</span>
-            <span class="invoice-value" id="lblTax">₹0.00</span>
-        </div>
-        <div class="invoice-row" id="rowCGST">
-            <span class="invoice-label">Central GST (CGST):</span>
-            <span class="invoice-value" id="lblCGST">₹0.00</span>
-        </div>
-        <div class="invoice-row" id="rowSGST">
-            <span class="invoice-label">State GST (SGST):</span>
-            <span class="invoice-value" id="lblSGST">₹0.00</span>
-        </div>
-        <div class="invoice-row" id="rowIGST" style="display: none;">
-            <span class="invoice-label">Integrated GST (IGST):</span>
-            <span class="invoice-value" id="lblIGST">₹0.00</span>
-        </div>
-        <div class="invoice-row" style="border-top: 1px solid rgba(46, 213, 115, 0.4); padding-top: 12px;">
-            <span class="grand-total-label">Gross Payable (Total Bill):</span>
-            <span class="grand-total-value" id="lblTotal">₹0.00</span>
-        </div>
+    <div class="attractive-visual">
+        <div class="visual-glow"></div>
+        <h3>Corporate Ledger</h3>
+        <p>Advanced tax separation engine. Automatically handles both exclusive and inclusive pricing models while splitting central and state jurisdictions seamlessly.</p>
+        <div class="visual-icon"><i class="fas fa-file-invoice-dollar"></i></div>
     </div>
-
-    <button class="process-btn" onclick="processGST()">
-        GENERATE INVOICE <i class="fas fa-file-invoice-dollar"></i>
-    </button>
 </div>
 
 <script>
     async function processGST() {
-        const amount = document.getElementById('gstAmount').value;
+        const amt = document.getElementById('gstAmount').value;
         const rate = document.getElementById('gstRate').value;
         const action = document.getElementById('gstAction').value;
-        const supply = document.getElementById('supplyType').value;
-
-        // Visual targets declarations
-        const lblBase = document.getElementById('lblBase');
-        const lblTax = document.getElementById('lblTax');
-        const lblCGST = document.getElementById('lblCGST');
-        const lblSGST = document.getElementById('lblSGST');
-        const lblIGST = document.getElementById('lblIGST');
-        const lblTotal = document.getElementById('lblTotal');
-
-        const rowCGST = document.getElementById('rowCGST');
-        const rowSGST = document.getElementById('rowSGST');
-        const rowIGST = document.getElementById('rowIGST');
-
-        if (amount === '' || isNaN(amount)) {
-            alert("Please enter a valid transactional ledger amount.");
+        
+        if(!amt) {
+            document.getElementById('lblBase').innerText = "₹0.00";
+            document.getElementById('lblCGST').innerText = "₹0.00";
+            document.getElementById('lblSGST').innerText = "₹0.00";
+            document.getElementById('lblTotal').innerText = "₹0.00";
             return;
         }
 
         try {
-            // Dispatch async POST network request to Django application backend
-            const response = await fetch('/calculate-gst/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    amount: amount,
-                    rate: rate,
-                    action: action,
-                    supply_type: supply
-                })
+            // Post payload to Django backend GST processor
+            const res = await fetch('/calculate-gst/', {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: amt, rate: rate, action: action, supply_type: 'intra' })
             });
-
-            const data = await response.json();
-
+            
+            const data = await res.json();
+            
             if (data.status === 'success') {
-                // Populate mapped billing metrics returned from server
-                lblBase.innerText = "₹" + data.base_amount;
-                lblTax.innerText = "₹" + data.total_gst;
-                lblTotal.innerText = "₹" + data.grand_total;
-
-                // Adjust UI representation according to supply jurisdiction split
-                if (supply === 'intra') {
-                    rowCGST.style.display = 'flex';
-                    rowSGST.style.display = 'flex';
-                    rowIGST.style.display = 'none';
-                    lblCGST.innerText = "₹" + data.cgst;
-                    lblSGST.innerText = "₹" + data.sgst;
-                } else {
-                    rowCGST.style.display = 'none';
-                    rowSGST.style.display = 'none';
-                    rowIGST.style.display = 'flex';
-                    lblIGST.innerText = "₹" + data.igst;
-                }
+                document.getElementById('lblBase').innerText = "₹" + data.base_amount;
+                document.getElementById('lblCGST').innerText = "₹" + data.cgst;
+                document.getElementById('lblSGST').innerText = "₹" + data.sgst;
+                document.getElementById('lblTotal').innerText = "₹" + data.grand_total;
             } else {
-                alert("Server Validation Error: " + data.error);
+                alert("Error: " + data.error);
             }
-        } catch (error) {
-            console.error("Network communication breakdown:", error);
-            alert("Unable to reach the accounting backend node.");
+        } catch (e) { 
+            console.error("GST Calculation failed", e);
         }
     }
 </script>
