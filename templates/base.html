@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyrus For Everyone | Smart Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Wallpoet&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+           1. BASE & HOLOGRAPHIC BACKGROUND
+           ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, rgba(4, 25, 48, 0.9) 0%, rgba(14, 56, 94, 0.9) 100%), 
+                        url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
+            background-attachment: fixed;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* =========================================
+           2. HEADER (GLASSMORPHISM)
+           ========================================= */
+        .top-header {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 100;
+        }
+
+        .header-icon {
+            height: 50px;
+            width: 50px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .main-title {
+            font-family: 'Wallpoet', 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+
+        .text-cyrus { color: #ff4757; text-shadow: 0 0 10px rgba(255, 71, 87, 0.6); }
+        .text-for { color: #2ed573; text-shadow: 0 0 10px rgba(46, 213, 115, 0.6); }
+        .text-everyone { color: #ffa502; text-shadow: 0 0 10px rgba(255, 165, 2, 0.6); }
+        .arrow-icon { color: rgb(56, 37, 124); font-size: 1.5rem; }
+
+        .menu-toggle {
+            display: none;
+            font-size: 2rem;
+            color: #ffa502;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* =========================================
+           3. MAIN LAYOUT & SIDEBAR
+           ========================================= */
+        .layout-container {
+            display: flex;
+            height: calc(100vh - 80px);
+            width: 100%;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 320px;
+            height: 100%;
+            background: rgba(10, 20, 35, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 2px solid #ffa502;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 50;
+        }
+
+        .sidebar-heading {
+            color: #a9da16;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 165, 2, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .nav-menu { display: flex; flex-direction: column; gap: 15px; }
+
+        .nav-btn {
+            text-decoration: none;
+            color: #ff4757;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5), inset 1px 1px 2px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            color: #2ed573;
+            background: rgba(46, 213, 115, 0.15);
+            border: 1px solid #2ed573;
+            box-shadow: 0 8px 15px rgba(46, 213, 115, 0.3), inset 0 0 8px rgba(46, 213, 115, 0.2);
+        }
+
+        .sidebar-footer { margin-top: auto; text-align: center; }
+        .sidebar-footer p { color: #a4b0be; font-size: 0.9rem; margin-bottom: 10px; }
+        .footer-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid rgba(46, 213, 115, 0.5);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            opacity: 1;
+        }
+
+        /* =========================================
+           4. RIGHT CONTENT AREA
+           ========================================= */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto; 
+            position: relative;
+        }
+
+        .dynamic-wrapper {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            z-index: 2;
+        }
+
+        /* =========================================
+           5. RESPONSIVE MEDIA QUERIES (MOBILE FIXES)
+           ========================================= */
+        @media (max-width: 900px) {
+            .main-title { font-size: 1.5rem; gap: 5px; }
+            .header-icon { height: 40px; width: 40px; }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; font-size: 1.6rem; margin-right: 5px; }
+            .sidebar { position: absolute; left: -320px; top: 0; background: rgba(10, 20, 35, 0.95); height: 100%; border-radius: 0; z-index: 200; }
+            .layout-container { padding: 10px; gap: 0; }
+            .sidebar.active { left: 0; }
+            
+            /* Header fixes for mobile */
+            .top-header { padding: 0 10px; } 
+            .header-icon { height: 32px; width: 32px; } /* Smaller panda */
+            .main-title { font-size: 1rem; gap: 3px; letter-spacing: 0px; } /* Smaller text to fit screen */
+            .arrow-icon { font-size: 0.9rem; margin: 0 2px; }
+            .hide-mobile { display: none; }
+        }
+
+        /* Extra fix for very small screens like iPhone SE (375px width) */
+        @media (max-width: 400px) {
+            .main-title { font-size: 0.85rem; }
+            .menu-toggle { margin-right: 0px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <img src="https://cdn-icons-png.flaticon.com/512/3069/3069172.png" alt="Panda" class="header-icon">
+        <h1 class="main-title">
+            <span class="text-cyrus">CYRUS</span> <span class="arrow-icon">➔</span> 
+            <span class="text-for">FOR</span> <span class="arrow-icon">➔</span> 
+            <span class="text-everyone">EVERYONE</span>
+        </h1>
+        <img src="https://cdn-icons-png.flaticon.com/512/809/809052.png" alt="Bee" class="header-icon hide-mobile">
+    </header>
+
+    <div class="layout-container">
+        
+        <aside class="sidebar" id="mobile-sidebar">
+            <div class="sidebar-heading">
+                <span>Select Your Choice:</span> <span>➔</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="/calculator/" class="nav-btn">CALCULATOR <i class="fas fa-arrow-right"></i></a>
+                <a href="/height/" class="nav-btn">HEIGHT <i class="fas fa-arrow-right"></i></a>
+                <a href="/weight/" class="nav-btn">WEIGHT <i class="fas fa-arrow-right"></i></a>
+                <a href="/distance/" class="nav-btn">DISTANCE <i class="fas fa-arrow-right"></i></a>
+                <a href="/area/" class="nav-btn">AREA <i class="fas fa-arrow-right"></i></a>
+                <a href="/gst/" class="nav-btn">GST% <i class="fas fa-arrow-right"></i></a>
+            </nav>
+            <div class="sidebar-footer">
+                <p>Thanks For Choosing us</p>
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop" alt="Team" class="footer-img">
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <div class="dynamic-wrapper">
+                
+                {% block content %}
+                {% endblock %}
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobile-sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
+
+</body>
+</html>

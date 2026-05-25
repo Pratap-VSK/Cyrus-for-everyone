@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Transparent Glassmorphism Box */
+    .conv-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(46, 213, 115, 0.3);
+        border-radius: 20px;
+        padding: 40px 30px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        text-align: center;
+    }
+
+    .conv-title {
+        color: #ffa502; /* Yellow color */
+        font-family: 'Wallpoet', cursive;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+        font-size: 1.5rem;
+        text-shadow: 0 0 10px rgba(255, 165, 2, 0.5);
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .input-group label {
+        color: #a4b0be;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .input-row {
+        display: flex;
+        gap: 10px;
+    }
+
+    .conv-input, .conv-select {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-size: 1.2rem;
+        font-family: 'Poppins', sans-serif;
+        padding: 15px;
+        border-radius: 10px;
+        outline: none;
+    }
+
+    .conv-input { flex: 1; }
+    .conv-select { width: 130px; cursor: pointer; }
+
+    .conv-input:focus, .conv-select:focus {
+        border-color: #2ed573;
+        box-shadow: 0 0 10px rgba(46, 213, 115, 0.3);
+    }
+
+    .conv-select option { background: #0a1423; color: white; }
+
+    /* Swap Button */
+    .swap-btn {
+        background: rgba(255, 165, 2, 0.1);
+        border: 1px solid rgba(255, 165, 2, 0.4);
+        color: #ffa502;
+        font-size: 1.5rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        margin: 10px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s;
+    }
+
+    .swap-btn:hover {
+        background: #ffa502;
+        color: #000;
+        transform: rotate(180deg);
+    }
+
+    /* Output Result Box */
+    .result-box {
+        margin-top: 25px;
+        background: rgba(46, 213, 115, 0.1);
+        border: 2px solid #2ed573;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .result-value {
+        color: #2ed573;
+        font-size: 2.5rem;
+        font-weight: 800;
+        text-shadow: 0 0 10px rgba(46, 213, 115, 0.4);
+    }
+
+    .result-unit { color: white; font-size: 1.2rem; opacity: 0.8; }
+</style>
+
+<div class="conv-container">
+    <h2 class="conv-title">HEIGHT CONVERTER</h2>
+    
+    <div class="input-group">
+        <label>ENTER HEIGHT VALUE</label>
+        <div class="input-row">
+            <input type="number" id="heightValue" class="conv-input" placeholder="e.g. 170" value="1" oninput="sendToBackend()">
+            <select id="heightFrom" class="conv-select" onchange="sendToBackend()">
+                <option value="mm">mm</option>
+                <option value="cm" selected>cm</option>
+                <option value="m">Meter</option>
+                <option value="in">Inch</option>
+                <option value="ft">Feet</option>
+                <option value="yd">Yard</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="swap-btn" onclick="swapUnits()">
+        <i class="fas fa-exchange-alt"></i>
+    </button>
+
+    <div class="input-group" style="margin-bottom: 0;">
+        <label>CONVERT TO</label>
+        <div class="input-row">
+            <select id="heightTo" class="conv-select" style="width: 100%;" onchange="sendToBackend()">
+                <option value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="m" selected>Meter</option>
+                <option value="in">Inch</option>
+                <option value="ft">Feet</option>
+                <option value="yd">Yard</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="result-box">
+        <div class="result-value" id="heightResult">0.01</div>
+        <div class="result-unit" id="heightUnitLabel">Meter</div>
+    </div>
+</div>
+
+<script>
+    // Yeh function backend URL '/calculate-height/' ko data bhejega
+    async function sendToBackend() {
+        const val = document.getElementById('heightValue').value;
+        const fromUnit = document.getElementById('heightFrom').value;
+        const toUnit = document.getElementById('heightTo').value;
+        const outputLabel = document.getElementById('heightTo').options[document.getElementById('heightTo').selectedIndex].text;
+
+        if (val === '') {
+            document.getElementById('heightResult').innerText = "0";
+            document.getElementById('heightUnitLabel').innerText = outputLabel;
+            return;
+        }
+
+        try {
+            // Django view ko fetch request bhej rahe hain
+            const response = await fetch('/calculate-height/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    value: val,
+                    from_unit: fromUnit,
+                    to_unit: toUnit
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.result !== undefined) {
+                document.getElementById('heightResult').innerText = data.result;
+                document.getElementById('heightUnitLabel').innerText = outputLabel;
+            } else {
+                document.getElementById('heightResult').innerText = "Error";
+            }
+        } catch (error) {
+            document.getElementById('heightResult').innerText = "Server Error";
+            console.error("Backend communication error:", error);
+        }
+    }
+
+    function swapUnits() {
+        const fromSelect = document.getElementById('heightFrom');
+        const toSelect = document.getElementById('heightTo');
+        
+        const temp = fromSelect.value;
+        fromSelect.value = toSelect.value;
+        toSelect.value = temp;
+        
+        sendToBackend();
+    }
+
+    // Page load hote hi pehli baar calculation auto chal jaye
+    window.onload = sendToBackend;
+</script>
+{% endblock %}

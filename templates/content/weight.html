@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Main Container with Amethyst/Purple Theme for Industrial Scale Look */
+    .conv-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(155, 89, 182, 0.3);
+        border-radius: 20px;
+        padding: 40px 30px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(155, 89, 182, 0.1);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    /* Title Styling */
+    .conv-title {
+        color: #9b59b6;
+        font-family: 'Wallpoet', cursive;
+        letter-spacing: 2px;
+        font-size: 1.6rem;
+        margin: 0;
+        text-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
+    }
+
+    /* Common Label Styling */
+    .section-label {
+        color: #a4b0be;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-align: left;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* Step 1: Input Box (Digital Scale Screen Vibe) */
+    .input-box {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-size: 1.5rem;
+        font-family: 'Poppins', sans-serif;
+        padding: 15px 20px;
+        border-radius: 12px;
+        width: 100%;
+        outline: none;
+        transition: all 0.3s;
+        text-align: center;
+    }
+
+    .input-box:focus {
+        border-color: #9b59b6;
+        box-shadow: 0 0 15px rgba(155, 89, 182, 0.3);
+    }
+
+    /* Step 2: Conversion Selection Row */
+    .conversion-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .unit-select-box {
+        flex: 1;
+        text-align: left;
+    }
+
+    .conv-select {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-size: 1.1rem;
+        padding: 12px;
+        border-radius: 10px;
+        width: 100%;
+        outline: none;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .conv-select:focus { border-color: #9b59b6; }
+    .conv-select option { background: #0a1423; color: white; }
+
+    /* Directional Arrow */
+    .arrow-icon {
+        color: #9b59b6;
+        font-size: 1.5rem;
+        margin-top: 25px;
+        opacity: 0.7;
+    }
+
+    /* Step 3: Output Display Area */
+    .output-section {
+        background: rgba(155, 89, 182, 0.1);
+        border: 2px dashed rgba(155, 89, 182, 0.5);
+        padding: 20px;
+        border-radius: 12px;
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .result-value {
+        color: #9b59b6;
+        font-size: 2.5rem;
+        font-weight: 800;
+        word-break: break-all;
+        text-shadow: 0 0 15px rgba(155, 89, 182, 0.4);
+    }
+
+    .result-unit {
+        color: white;
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-top: 5px;
+    }
+
+    /* Step 4: Process Action Button */
+    .process-btn {
+        background: linear-gradient(145deg, rgba(155, 89, 182, 0.1), rgba(0, 0, 0, 0.3));
+        border: 1px solid #9b59b6;
+        color: #9b59b6;
+        font-size: 1.2rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        padding: 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        width: 100%;
+    }
+
+    .process-btn:hover {
+        background: rgba(155, 89, 182, 0.2);
+        color: #ffffff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(155, 89, 182, 0.4), inset 0 0 10px rgba(155, 89, 182, 0.2);
+    }
+
+    .process-btn:active {
+        transform: translateY(1px);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 450px) {
+        .conversion-row { flex-direction: column; gap: 10px; }
+        .arrow-icon { transform: rotate(90deg); margin-top: 0; margin-bottom: 0; }
+    }
+</style>
+
+<div class="conv-container">
+    <h2 class="conv-title">WEIGHT SCALE</h2>
+    
+    <div>
+        <label class="section-label">1. ENTER WEIGHT VALUE</label>
+        <input type="number" id="weightValue" class="input-box" placeholder="e.g. 50">
+    </div>
+
+    <div class="conversion-row">
+        <div class="unit-select-box">
+            <label class="section-label">FROM UNIT</label>
+            <select id="weightFrom" class="conv-select">
+                <option value="mg">Milligram (mg)</option>
+                <option value="g">Gram (g)</option>
+                <option value="kg" selected>Kilogram (kg)</option>
+                <option value="q">Quintal (q)</option>
+                <option value="ton">Metric Ton (t)</option>
+                <option value="lb">Pound (lbs)</option>
+                <option value="oz">Ounce (oz)</option>
+            </select>
+        </div>
+        
+        <div class="arrow-icon"><i class="fas fa-arrow-right"></i></div>
+        
+        <div class="unit-select-box">
+            <label class="section-label">TO UNIT</label>
+            <select id="weightTo" class="conv-select">
+                <option value="mg">Milligram (mg)</option>
+                <option value="g">Gram (g)</option>
+                <option value="kg">Kilogram (kg)</option>
+                <option value="q">Quintal (q)</option>
+                <option value="ton">Metric Ton (t)</option>
+                <option value="lb" selected>Pound (lbs)</option>
+                <option value="oz">Ounce (oz)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="output-section">
+        <label class="section-label" style="text-align: center; color: #9b59b6;">FINAL RESULT</label>
+        <div class="result-value" id="weightResult">--</div>
+        <div class="result-unit" id="weightUnitLabel">Ready to measure</div>
+    </div>
+
+    <button class="process-btn" onclick="processWeight()">
+        PROCESS <i class="fas fa-balance-scale"></i>
+    </button>
+</div>
+
+<script>
+    // Asynchronous function to communicate with Django backend
+    async function processWeight() {
+        const valInput = document.getElementById('weightValue').value;
+        const fromUnit = document.getElementById('weightFrom').value;
+        const toUnit = document.getElementById('weightTo').value;
+        const toLabel = document.getElementById('weightTo').options[document.getElementById('weightTo').selectedIndex].text;
+
+        const resultBox = document.getElementById('weightResult');
+        const unitLabelBox = document.getElementById('weightUnitLabel');
+
+        // Validate input data
+        if (valInput === '' || isNaN(valInput)) {
+            resultBox.innerText = "Error";
+            resultBox.style.color = "#ff4757"; 
+            unitLabelBox.innerText = "Please enter a valid weight";
+            return;
+        }
+
+        // Show processing state while waiting for server response
+        resultBox.innerText = "Measuring...";
+        resultBox.style.color = "#9b59b6"; 
+        unitLabelBox.innerText = "Fetching from Server...";
+
+        try {
+            // Send POST request to Django backend
+            const response = await fetch('/calculate-weight/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    value: valInput,
+                    from_unit: fromUnit,
+                    to_unit: toUnit
+                })
+            });
+
+            const data = await response.json();
+
+            // Handle successful calculation
+            if (data.result !== undefined) {
+                resultBox.innerText = data.result;
+                unitLabelBox.innerText = toLabel;
+            } else {
+                // Handle backend errors
+                resultBox.innerText = "Error";
+                resultBox.style.color = "#ff4757";
+                unitLabelBox.innerText = data.error;
+            }
+        } catch (error) {
+            // Handle network or server downtime
+            resultBox.innerText = "Server Down";
+            resultBox.style.color = "#ff4757";
+            unitLabelBox.innerText = "Could not connect to backend";
+            console.error("Backend communication failed:", error);
+        }
+    }
+</script>
+{% endblock %}

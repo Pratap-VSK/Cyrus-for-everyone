@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Main Container */
+    .conv-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(0, 210, 211, 0.3);
+        border-radius: 20px;
+        padding: 40px 30px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 210, 211, 0.1);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 25px; /* Har section ke beech barabar space */
+    }
+
+    .conv-title {
+        color: #00d2d3;
+        font-family: 'Wallpoet', cursive;
+        letter-spacing: 2px;
+        font-size: 1.6rem;
+        margin: 0;
+        text-shadow: 0 0 10px rgba(0, 210, 211, 0.5);
+    }
+
+    /* Common Label Styling */
+    .section-label {
+        color: #a4b0be;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-align: left;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* 1. Input Section */
+    .input-box {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-size: 1.5rem;
+        font-family: 'Poppins', sans-serif;
+        padding: 15px 20px;
+        border-radius: 12px;
+        width: 100%;
+        outline: none;
+        transition: all 0.3s;
+        text-align: center;
+    }
+
+    .input-box:focus {
+        border-color: #00d2d3;
+        box-shadow: 0 0 15px rgba(0, 210, 211, 0.3);
+    }
+
+    /* 2. Conversion Type Section */
+    .conversion-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .unit-select-box {
+        flex: 1;
+        text-align: left;
+    }
+
+    .conv-select {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-size: 1.1rem;
+        padding: 12px;
+        border-radius: 10px;
+        width: 100%;
+        outline: none;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .conv-select:focus { border-color: #00d2d3; }
+    .conv-select option { background: #0a1423; color: white; }
+
+    .arrow-icon {
+        color: #00d2d3;
+        font-size: 1.5rem;
+        margin-top: 25px; /* Label ke neeche align karne ke liye */
+        opacity: 0.7;
+    }
+
+    /* 3. Output Section */
+    .output-section {
+        background: rgba(0, 210, 211, 0.1);
+        border: 2px dashed rgba(0, 210, 211, 0.5);
+        padding: 20px;
+        border-radius: 12px;
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .result-value {
+        color: #00d2d3;
+        font-size: 2.5rem;
+        font-weight: 800;
+        word-break: break-all;
+        text-shadow: 0 0 15px rgba(0, 210, 211, 0.4);
+    }
+
+    .result-unit {
+        color: white;
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-top: 5px;
+    }
+
+    /* 4. Process Button */
+    .process-btn {
+        background: linear-gradient(145deg, rgba(0, 210, 211, 0.1), rgba(0, 0, 0, 0.3));
+        border: 1px solid #00d2d3;
+        color: #00d2d3;
+        font-size: 1.2rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        padding: 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        width: 100%;
+    }
+
+    .process-btn:hover {
+        background: rgba(0, 210, 211, 0.2);
+        color: #ffffff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 210, 211, 0.4), inset 0 0 10px rgba(0, 210, 211, 0.2);
+    }
+
+    .process-btn:active {
+        transform: translateY(1px);
+    }
+
+    /* Responsive */
+    @media (max-width: 450px) {
+        .conversion-row { flex-direction: column; gap: 10px; }
+        .arrow-icon { transform: rotate(90deg); margin-top: 0; margin-bottom: 0; }
+    }
+</style>
+
+<div class="conv-container">
+    <h2 class="conv-title">DISTANCE CALCULATOR</h2>
+    
+    <div>
+        <label class="section-label">1. ENTER DISTANCE VALUE</label>
+        <input type="number" id="distValue" class="input-box" placeholder="e.g. 100">
+    </div>
+
+    <div class="conversion-row">
+        <div class="unit-select-box">
+            <label class="section-label">FROM UNIT</label>
+            <select id="distFrom" class="conv-select">
+                <option value="m">Meter (m)</option>
+                <option value="km" selected>Kilometer (km)</option>
+                <option value="mi">Mile (mi)</option>
+                <option value="yd">Yard (yd)</option>
+                <option value="ft">Feet (ft)</option>
+                <option value="nmi">Nautical Mile</option>
+            </select>
+        </div>
+        
+        <div class="arrow-icon"><i class="fas fa-arrow-right"></i></div>
+        
+        <div class="unit-select-box">
+            <label class="section-label">TO UNIT</label>
+            <select id="distTo" class="conv-select">
+                <option value="m">Meter (m)</option>
+                <option value="km">Kilometer (km)</option>
+                <option value="mi" selected>Mile (mi)</option>
+                <option value="yd">Yard (yd)</option>
+                <option value="ft">Feet (ft)</option>
+                <option value="nmi">Nautical Mile</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="output-section">
+        <label class="section-label" style="text-align: center; color: #00d2d3;">FINAL RESULT</label>
+        <div class="result-value" id="distResult">--</div>
+        <div class="result-unit" id="distUnitLabel">Ready to calculate</div>
+    </div>
+
+    <button class="process-btn" onclick="processDistance()">
+        PROCESS <i class="fas fa-bolt"></i>
+    </button>
+</div>
+
+<script>
+    async function processDistance() {
+        const valInput = document.getElementById('distValue').value;
+        const fromUnit = document.getElementById('distFrom').value;
+        const toUnit = document.getElementById('distTo').value;
+        const toLabel = document.getElementById('distTo').options[document.getElementById('distTo').selectedIndex].text;
+
+        const resultBox = document.getElementById('distResult');
+        const unitLabelBox = document.getElementById('distUnitLabel');
+
+        // Agar input khali hai
+        if (valInput === '' || isNaN(valInput)) {
+            resultBox.innerText = "Error";
+            resultBox.style.color = "#ff4757"; // Red color
+            unitLabelBox.innerText = "Please enter a valid number";
+            return;
+        }
+
+        // Jab tak backend se data aa raha hai, tab tak 'Processing...' dikhayenge
+        resultBox.innerText = "Processing...";
+        resultBox.style.color = "#00d2d3"; // Cyan color
+        unitLabelBox.innerText = "Fetching from Server...";
+
+        try {
+            // Django backend ko POST request bhejna
+            const response = await fetch('/calculate-distance/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    value: valInput,
+                    from_unit: fromUnit,
+                    to_unit: toUnit
+                })
+            });
+
+            const data = await response.json();
+
+            // Agar backend ne success result bheja
+            if (data.result !== undefined) {
+                resultBox.innerText = data.result;
+                unitLabelBox.innerText = toLabel;
+            } else {
+                // Agar backend se error aayi
+                resultBox.innerText = "Error";
+                resultBox.style.color = "#ff4757";
+                unitLabelBox.innerText = data.error;
+            }
+        } catch (error) {
+            // when backend issue or server issue
+            resultBox.innerText = "Server Down";
+            resultBox.style.color = "#ff4757";
+            unitLabelBox.innerText = "Could not connect to backend";
+            console.error("Backend Error:", error);
+        }
+    }
+</script>
+{% endblock %}
