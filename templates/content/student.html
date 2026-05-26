@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* =========================================
+       1. LAYOUT & THEME (ELECTRIC YELLOW)
+       ========================================= */
+    .page-wrapper {
+        display: flex;
+        width: 100%;
+        max-width: 950px;
+        gap: 40px;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+    }
+
+    .conv-container {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(234, 179, 8, 0.3); 
+        border-radius: 20px;
+        padding: 30px;
+        width: 450px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(234, 179, 8, 0.1);
+        flex-shrink: 0;
+    }
+
+    .conv-title { 
+        color: #eab308; 
+        font-family: 'Wallpoet', cursive; 
+        margin-bottom: 15px; 
+        font-size: 1.6rem; 
+        text-shadow: 0 0 10px rgba(234, 179, 8, 0.5); 
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .section-label { 
+        color: #a4b0be; 
+        font-size: 0.8rem; 
+        font-weight: 600; 
+        letter-spacing: 1px; 
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* =========================================
+       2. CUSTOM DROPDOWN (PERMANENT SOLUTION)
+       ========================================= */
+    .custom-select-wrapper {
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .custom-select-trigger {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-size: 0.95rem;
+        padding: 12px 15px;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: 0.3s;
+        box-shadow: inset 0 3px 10px rgba(0,0,0,0.5);
+    }
+
+    .custom-select-trigger:hover, .custom-select-wrapper.open .custom-select-trigger {
+        border-color: #eab308;
+        box-shadow: inset 0 3px 10px rgba(0,0,0,0.5), 0 0 8px rgba(234, 179, 8, 0.3);
+    }
+
+    .custom-options {
+        position: absolute;
+        top: 110%;
+        left: 0;
+        right: 0;
+        background: rgba(10, 20, 35, 0.98);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(234, 179, 8, 0.4);
+        border-radius: 15px;
+        max-height: 350px;
+        overflow-y: auto;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    }
+
+    .custom-select-wrapper.open .custom-options {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .optgroup-label {
+        color: #eab308;
+        font-weight: 800;
+        font-size: 0.75rem;
+        padding: 12px 15px 5px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        background: rgba(0,0,0,0.3);
+    }
+
+    .custom-option {
+        padding: 10px 20px;
+        color: #cbd5e1;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: 0.2s;
+    }
+
+    /* Permanent Hover Logic */
+    .custom-option:hover {
+        background-color: #eab308;
+        color: #000;
+        font-weight: 600;
+    }
+
+    .custom-option.selected {
+        background: rgba(234, 179, 8, 0.15);
+        color: #eab308;
+        border-left: 4px solid #eab308;
+    }
+
+    /* Scrollbar */
+    .custom-options::-webkit-scrollbar { width: 6px; }
+    .custom-options::-webkit-scrollbar-thumb { background: #eab308; border-radius: 10px; }
+
+    /* =========================================
+       3. INPUTS & RESULTS
+       ========================================= */
+    .input-box {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1rem;
+        padding: 10px 15px;
+        border-radius: 12px;
+        width: 100%;
+        outline: none;
+        margin-bottom: 15px;
+        transition: 0.3s;
+        box-shadow: inset 0 3px 10px rgba(0,0,0,0.5);
+    }
+
+    .input-box:focus { border-color: #eab308; }
+
+    #dynamic-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .full-width { grid-column: span 2; }
+
+    .result-box {
+        background: rgba(234, 179, 8, 0.05); 
+        border: 1px dashed rgba(234, 179, 8, 0.4); 
+        padding: 20px; 
+        border-radius: 12px; 
+        text-align: center; 
+        margin-bottom: 20px;
+        min-height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .result-value { color: #eab308; font-size: 2.2rem; font-weight: 800; text-shadow: 0 0 10px rgba(234, 179, 8, 0.3); }
+    .result-unit { color: #cbd5e1; font-size: 0.9rem; margin-top: 5px; }
+
+    .btn-submit { 
+        width: 100%; padding: 13px; background: #eab308; color: #000; border: none; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(234, 179, 8, 0.3);
+    }
+
+    .btn-submit:hover { background: #ca8a04; color: #fff; transform: translateY(-2px); }
+
+    /* Visual Panel */
+    .attractive-visual {
+        flex: 1; background: linear-gradient(135deg, rgba(234, 179, 8, 0.05), rgba(0,0,0,0.4)); border: 1px solid rgba(234, 179, 8, 0.2); border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden;
+    }
+    
+    .attractive-visual h3 { color: #eab308; font-size: 1.8rem; font-family: 'Wallpoet', cursive; margin-bottom: 15px; }
+    .attractive-visual p { color: #a4b0be; font-size: 1rem; line-height: 1.6; }
+    .visual-icon { font-size: 4.5rem; color: rgba(234, 179, 8, 0.2); text-align: right; }
+</style>
+
+<div class="page-wrapper">
+    <div class="conv-container">
+        <h2 class="conv-title">STUDENT ENGINE</h2>
+        
+        <label class="section-label">SELECT TARGET SOLUTION</label>
+        
+        <div class="custom-select-wrapper" id="customSelectWrapper">
+            <div class="custom-select-trigger" id="customSelectTrigger">
+                <span>Select a module...</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: #eab308;"></i>
+            </div>
+            <div class="custom-options">
+                <div class="optgroup-label">IoT Hardware & Power</div>
+                <div class="custom-option" data-value="ledResistor">LED Resistor Calc (R)</div>
+                <div class="custom-option" data-value="vdiv">Voltage Divider (Vout)</div>
+                <div class="custom-option" data-value="adcConvert">ADC to Voltage (Sensors)</div>
+                <div class="custom-option" data-value="battery">Battery Runtime (Hours)</div>
+                <div class="custom-option" data-value="energy">Total Energy (E = P×t)</div>
+
+                <div class="optgroup-label">Basic Circuitry</div>
+                <div class="custom-option" data-value="voltage">Voltage (V = I × R)</div>
+                <div class="custom-option" data-value="current">Current (I = V ÷ R)</div>
+                <div class="custom-option" data-value="resistance">Resistance (R = V ÷ I)</div>
+                <div class="custom-option" data-value="power">Electrical Power (P = V × I)</div>
+
+                <div class="optgroup-label">Electromagnetism & Waves</div>
+                <div class="custom-option" data-value="rctime">RC Time Constant (τ)</div>
+                <div class="custom-option" data-value="charge">Capacitor Charge (Q)</div>
+                <div class="custom-option" data-value="transformer">Transformer Ratio (Vs)</div>
+                <div class="custom-option" data-value="magneticForce">Magnetic Force (F)</div>
+                <div class="custom-option" data-value="wavelength">RF Wavelength (λ)</div>
+                <div class="custom-option" data-value="frequency">RF Frequency (f)</div>
+
+                <div class="optgroup-label">Mechanics & Force</div>
+                <div class="custom-option" data-value="velocity">Final Velocity (v)</div>
+                <div class="custom-option" data-value="distance">Displacement (s)</div>
+                <div class="custom-option" data-value="kineticEnergy">Kinetic Energy (K.E)</div>
+                <div class="custom-option" data-value="potentialEnergy">Potential Energy (P.E)</div>
+                <div class="custom-option" data-value="basicPressure">Basic Pressure (P = F÷A)</div>
+                <div class="custom-option" data-value="pressure">Hydrostatic Pressure (Pa)</div>
+
+                <div class="optgroup-label">Thermodynamics & Optics</div>
+                <div class="custom-option" data-value="heat">Joule's Heating (H = I²Rt)</div>
+                <div class="custom-option" data-value="tempCF">Celsius to Fahrenheit (°F)</div>
+                <div class="custom-option" data-value="tempKC">Celsius to Kelvin (K)</div>
+                <div class="custom-option" data-value="illuminance">Illuminance (Lux)</div>
+            </div>
+        </div>
+
+        <input type="hidden" id="formulaSelect" value="">
+
+        <div id="dynamic-inputs"></div>
+
+        <div class="result-box">
+            <div id="mainResult" class="result-value">--</div>
+            <div id="subResult" class="result-unit">Choose a module above</div>
+        </div>
+
+        <button onclick="calculateResultBackend()" class="btn-submit">COMPUTE SOLUTION</button>
+    </div>
+
+    <div class="attractive-visual">
+        <h3 id="visualTitle">Physics Matrix</h3>
+        <p id="visualDesc">Select a physical parameter to begin high-precision server-side computation. Integrated logic for IoT hardware, motion dynamics, and circuits.</p>
+        <div class="visual-icon"><i class="fas fa-atom"></i></div>
+    </div>
+</div>
+
+<script>
+    // Complete mapping of all 25 formulas for Frontend UI logic
+    const formulas = {
+        // IoT & Power
+        ledResistor: { title: "Required Resistor", unit: "Ohms (Ω)", inputs: [{ id: "val1", label: "SOURCE VOLTAGE", placeholder: "Vs" }, { id: "val2", label: "LED VOLTAGE", placeholder: "Vf" }, { id: "val3", label: "LED CURRENT", placeholder: "Amps" }] },
+        vdiv: { title: "Output Voltage", unit: "Volts (V)", inputs: [{ id: "val1", label: "INPUT VOLTAGE", placeholder: "Vin", full: true }, { id: "val2", label: "RESISTOR 1", placeholder: "R1" }, { id: "val3", label: "RESISTOR 2", placeholder: "R2" }] },
+        adcConvert: { title: "Sensor Voltage", unit: "Volts (V)", inputs: [{ id: "val1", label: "ADC VALUE", placeholder: "e.g. 512", full: true }, { id: "val2", label: "SYSTEM VOLTAGE", placeholder: "e.g. 3.3" }, { id: "val3", label: "RESOLUTION", placeholder: "e.g. 1024" }] },
+        battery: { title: "Runtime", unit: "Hours (h)", inputs: [{ id: "val1", label: "CAPACITY (mAh)", placeholder: "mAh" }, { id: "val2", label: "LOAD (mA)", placeholder: "mA" }] },
+        energy: { title: "Total Energy", unit: "Joules (J)", inputs: [{ id: "val1", label: "POWER (W)", placeholder: "Watts" }, { id: "val2", label: "TIME (s)", placeholder: "Seconds" }] },
+        
+        // Basic Circuitry
+        voltage: { title: "Voltage", unit: "Volts (V)", inputs: [{ id: "val1", label: "CURRENT (I)", placeholder: "Amps" }, { id: "val2", label: "RESISTANCE (R)", placeholder: "Ohms" }] },
+        current: { title: "Current", unit: "Amps (A)", inputs: [{ id: "val1", label: "VOLTAGE (V)", placeholder: "Volts" }, { id: "val2", label: "RESISTANCE (R)", placeholder: "Ohms" }] },
+        resistance: { title: "Resistance", unit: "Ohms (Ω)", inputs: [{ id: "val1", label: "VOLTAGE (V)", placeholder: "Volts" }, { id: "val2", label: "CURRENT (I)", placeholder: "Amps" }] },
+        power: { title: "Power", unit: "Watts (W)", inputs: [{ id: "val1", label: "VOLTAGE (V)", placeholder: "Volts" }, { id: "val2", label: "CURRENT (I)", placeholder: "Amps" }] },
+        
+        // Electromagnetism & Waves
+        rctime: { title: "Time Constant", unit: "Seconds (s)", inputs: [{ id: "val1", label: "RESISTANCE (R)", placeholder: "Ohms" }, { id: "val2", label: "CAPACITANCE (C)", placeholder: "Farads" }] },
+        charge: { title: "Charge (Q)", unit: "Coulombs (C)", inputs: [{ id: "val1", label: "CAPACITANCE (C)", placeholder: "Farads" }, { id: "val2", label: "VOLTAGE (V)", placeholder: "Volts" }] },
+        transformer: { title: "Secondary Volts", unit: "Volts (V)", inputs: [{ id: "val1", label: "PRIMARY VOLTS", placeholder: "Vp", full: true }, { id: "val2", label: "PRIMARY TURNS", placeholder: "Np" }, { id: "val3", label: "SECONDARY TURNS", placeholder: "Ns" }] },
+        magneticForce: { title: "Magnetic Force", unit: "Newtons (N)", inputs: [{ id: "val1", label: "CURRENT (I)", placeholder: "A" }, { id: "val2", label: "LENGTH (L)", placeholder: "m" }, { id: "val3", label: "FIELD (B)", placeholder: "T" }, { id: "val4", label: "ANGLE (θ)", placeholder: "deg" }] },
+        wavelength: { title: "Wavelength", unit: "Meters (m)", inputs: [{ id: "val1", label: "FREQUENCY (f)", placeholder: "Hz", full: true }] },
+        frequency: { title: "Frequency", unit: "Hertz (Hz)", inputs: [{ id: "val1", label: "WAVELENGTH (λ)", placeholder: "Meters", full: true }] },
+        
+        // Mechanics & Force
+        velocity: { title: "Final Velocity", unit: "m/s", inputs: [{ id: "val1", label: "INITIAL (u)", placeholder: "m/s", full: true }, { id: "val2", label: "ACCEL (a)", placeholder: "m/s²" }, { id: "val3", label: "TIME (t)", placeholder: "s" }] },
+        distance: { title: "Displacement", unit: "Meters (m)", inputs: [{ id: "val1", label: "INITIAL (u)", placeholder: "m/s", full: true }, { id: "val2", label: "ACCEL (a)", placeholder: "m/s²" }, { id: "val3", label: "TIME (t)", placeholder: "s" }] },
+        kineticEnergy: { title: "Kinetic Energy", unit: "Joules (J)", inputs: [{ id: "val1", label: "MASS (m)", placeholder: "kg" }, { id: "val2", label: "VELOCITY (v)", placeholder: "m/s" }] },
+        potentialEnergy: { title: "Potential Energy", unit: "Joules (J)", inputs: [{ id: "val1", label: "MASS (m)", placeholder: "kg", full: true }, { id: "val2", label: "GRAVITY (g)", placeholder: "9.8" }, { id: "val3", label: "HEIGHT (h)", placeholder: "m" }] },
+        basicPressure: { title: "Pressure", unit: "Pascals (Pa)", inputs: [{ id: "val1", label: "FORCE (F)", placeholder: "Newtons" }, { id: "val2", label: "AREA (A)", placeholder: "m²" }] },
+        pressure: { title: "Hydrostatic Pressure", unit: "Pa", inputs: [{ id: "val1", label: "DENSITY (ρ)", placeholder: "kg/m³", full: true }, { id: "val2", label: "GRAVITY (g)", placeholder: "m/s²" }, { id: "val3", label: "DEPTH (h)", placeholder: "m" }] },
+
+        // Thermodynamics & Optics
+        heat: { title: "Generated Heat", unit: "Joules (J)", inputs: [{ id: "val1", label: "CURRENT (I)", placeholder: "A", full: true }, { id: "val2", label: "RESISTANCE (R)", placeholder: "Ω" }, { id: "val3", label: "TIME (t)", placeholder: "s" }] },
+        tempCF: { title: "Fahrenheit", unit: "°F", inputs: [{ id: "val1", label: "TEMPERATURE (°C)", placeholder: "Celsius", full: true }] },
+        tempKC: { title: "Kelvin", unit: "K", inputs: [{ id: "val1", label: "TEMPERATURE (°C)", placeholder: "Celsius", full: true }] },
+        illuminance: { title: "Illuminance", unit: "Lux", inputs: [{ id: "val1", label: "INTENSITY (I)", placeholder: "Candelas" }, { id: "val2", label: "DISTANCE (d)", placeholder: "m" }] }
+    };
+
+    const wrapper = document.getElementById('customSelectWrapper');
+    const trigger = document.getElementById('customSelectTrigger');
+    const options = document.querySelectorAll('.custom-option');
+    const hiddenInput = document.getElementById('formulaSelect');
+
+    // Custom Dropdown Open/Close
+    trigger.onclick = () => wrapper.classList.toggle('open');
+    document.onclick = (e) => { if (!wrapper.contains(e.target)) wrapper.classList.remove('open'); };
+
+    // Select Option Logic
+    options.forEach(opt => {
+        opt.onclick = function() {
+            options.forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+            trigger.querySelector('span').innerText = this.innerText;
+            hiddenInput.value = this.dataset.value;
+            wrapper.classList.remove('open');
+            generateInputs();
+        };
+    });
+
+    // Dynamically Inject Inputs
+    function generateInputs() {
+        const config = formulas[hiddenInput.value];
+        const container = document.getElementById('dynamic-inputs');
+        container.innerHTML = '';
+        document.getElementById('mainResult').innerText = '--';
+        document.getElementById('subResult').innerText = `${config.title} in ${config.unit}`;
+
+        config.inputs.forEach((inp) => {
+            const div = document.createElement('div');
+            // Make input full width if specified, or if it's the only input
+            if (inp.full || config.inputs.length === 1) {
+                div.className = 'full-width';
+            }
+            div.innerHTML = `<label class="section-label">${inp.label}</label><input type="number" step="any" id="${inp.id}" class="input-box" placeholder="${inp.placeholder}">`;
+            container.appendChild(div);
+        });
+    }
+
+    // Backend Execution
+    async function calculateResultBackend() {
+        const selection = hiddenInput.value;
+        if(!selection) return alert("Bhai, pehle koi module choose karo!");
+        const config = formulas[selection];
+        
+        const payload = { formula: selection };
+        let err = false;
+
+        config.inputs.forEach(inp => {
+            let v = parseFloat(document.getElementById(inp.id).value);
+            if (isNaN(v)) err = true;
+            payload[inp.id] = v;
+        });
+
+        if (err) return alert("Sare required fields bharna zaroori hai!");
+
+        try {
+            const res = await fetch('/calculate-physics/', { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify(payload) 
+            });
+            const data = await res.json();
+            
+            if (data.status === 'success') {
+                document.getElementById('mainResult').innerText = data.result;
+                document.getElementById('subResult').innerText = `${config.title} (${config.unit})`;
+            } else {
+                alert("Error: " + data.message);
+            }
+        } catch (e) { 
+            console.error(e); 
+            alert("Backend se connect nahi ho paya!");
+        }
+    }
+</script>
+{% endblock %}
