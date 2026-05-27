@@ -197,7 +197,7 @@
     .visual-icon { font-size: 4.5rem; color: rgba(234, 179, 8, 0.2); text-align: right; }
 
     /* =========================================
-       4. MOBILE RESPONSIVENESS FIXES (LEFT-RIGHT ALIGNED)
+       4. MOBILE RESPONSIVENESS FIXES
        ========================================= */
     @media (max-width: 768px) {
         .page-wrapper {
@@ -215,13 +215,11 @@
             display: none; 
         }
 
-        /* Yahan mobile par bhi 2 columns fix kiye hain, aur gap theek kiya hai */
         #dynamic-inputs { 
             grid-template-columns: 1fr 1fr; 
             gap: 10px; 
         }
         
-        /* Mobile par inputs padding aur font size adjust kiya taaki fit aayein */
         .input-box { 
             margin-bottom: 5px; 
             padding: 10px;
@@ -293,6 +291,7 @@
             </div>
         </div>
 
+        {% csrf_token %}
         <input type="hidden" id="formulaSelect" value="">
 
         <div id="dynamic-inputs"></div>
@@ -393,12 +392,17 @@
 
         if (err) return alert("Sare required fields bharna zaroori hai!");
 
+        // DOM se CSRF Token ko uthana
+        const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
+        const csrftoken = csrfTokenElement ? csrfTokenElement.value : '';
+
         try {
             const res = await fetch('/calculate-physics/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Student-Engine-Key': 'Cyrus_Secure_V1' 
+                    // Asli Django Security Token bheja jaa raha hai
+                    'X-CSRFToken': csrftoken 
                 },
                 body: JSON.stringify(payload)
             });

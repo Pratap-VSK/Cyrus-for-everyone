@@ -68,6 +68,12 @@
         }
 
         /* Top Right Button for Dashboard */
+        .launch-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
         .btn-launch {
             text-decoration: none;
             background: linear-gradient(90deg, #ff4757, #ff6b81);
@@ -84,6 +90,8 @@
             align-items: center;
             gap: 10px;
             border: 2px solid transparent;
+            position: relative;
+            z-index: 2;
         }
 
         .btn-launch:hover {
@@ -297,6 +305,36 @@
         }
 
         /* =========================================
+           5.1 NEW FEATURE ROADMAP SECTION (QUANTUM FEATURES)
+           ========================================= */
+        .roadmap-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .roadmap-card:hover {
+            border-color: #a855f7;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+        }
+        .lock-badge {
+            background: rgba(168, 85, 247, 0.15);
+            color: #c084fc;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* =========================================
            6. CALL TO ACTION (CTA)
            ========================================= */
         .cta-section {
@@ -377,18 +415,10 @@
             font-family: 'Wallpoet', cursive;
         }
 
-        /* Animation for the Korean Love Symbol */
-        @keyframes pulseHeart {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.25); text-shadow: 0 0 10px rgba(255, 107, 129, 0.8); }
-            100% { transform: scale(1); }
-        }
-
         .korean-love {
             display: inline-block;
             font-size: 1.1rem;
             margin-left: 0px;
-            /* animation: pulseHeart 1.5s ease-in-out infinite; */
             transform-origin: center;
         }
 
@@ -407,12 +437,13 @@
             .glass-hero-card { padding: 40px 20px; border: none; animation: none; transform: none; }
             
             .section-title { font-size: 2rem; }
+            .tools-grid { gap: 20px; }
             .tool-card { padding: 30px 20px; }
             .tool-card:hover { transform: translateY(-5px) scale(1.02); } 
             .dark-section { padding: 60px 20px; }
             .cta-container { padding: 40px 20px; animation: none; }
             
-            .korean-love { font-size: 1.2rem; } /* Slightly larger on mobile for visibility */
+            .korean-love { font-size: 1.2rem; } 
         }
     </style>
 </head>
@@ -424,9 +455,11 @@
             <h1 class="logo-text">CYRUS</h1>
         </div>
         
-        <a href="/calculator/" class="btn-launch">
-            <span>Access Tools</span> <i class="fas fa-rocket"></i>
-        </a>
+        <div class="launch-wrapper">
+            <a href="/calculator/" class="btn-launch">
+                <span>Access Tools</span> <i class="fas fa-rocket"></i>
+            </a>
+        </div>
     </header>
 
     <main class="hero-section">
@@ -512,6 +545,34 @@
                 <i class="fas fa-mobile-alt adv-icon" style="color: #f59e0b;"></i>
                 <h4>Responsive Matrix</h4>
                 <p>Whether on a 4K Desktop display or an iPhone SE, the Cyrus interface dynamically shifts to give you the perfect view.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" style="padding-top: 60px;">
+        <div class="section-header">
+            <h2 class="section-title" style="color: #a855f7;">QUANTUM ROADMAP</h2>
+            <p class="section-desc">Sneak peek into upcoming high-performance modules currently under heavy laboratory R&D phase.</p>
+        </div>
+        
+        <div class="tools-grid">
+            <div class="roadmap-card">
+                <div class="lock-badge"><i class="fas fa-lock"></i> Phase 2 Alpha</div>
+                <i class="fas fa-brain" style="font-size: 2.5rem; color: #a855f7; margin-bottom: 15px; display: block;"></i>
+                <h3 style="font-size: 1.25rem; margin-bottom: 10px;">AI Matrix Solver</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">Neural-network-powered linear algebra and multi-variable equation generator.</p>
+            </div>
+            <div class="roadmap-card">
+                <div class="lock-badge" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8;"><i class="fas fa-flask"></i> Prototyping</div>
+                <i class="fas fa-network-wired" style="font-size: 2.5rem; color: #0ea5e9; margin-bottom: 15px; display: block;"></i>
+                <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Predictive IoT Core</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">Advanced hardware power simulation algorithms for automated embedded systems.</p>
+            </div>
+            <div class="roadmap-card">
+                <div class="lock-badge" style="background: rgba(234, 179, 8, 0.15); color: #f59e0b;"><i class="fas fa-code-branch"></i> Concepts</div>
+                <i class="fas fa-cubes" style="font-size: 2.5rem; color: #eab308; margin-bottom: 15px; display: block;"></i>
+                <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Crypto Ledger</h3>
+                <p style="font-size: 0.85rem; color: #94a3b8;">Decentralized blockchain cryptography mathematics parsing interface.</p>
             </div>
         </div>
     </section>

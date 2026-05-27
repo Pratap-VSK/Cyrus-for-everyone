@@ -292,8 +292,8 @@ def calculate_gst(request):
 def calculate_physics(request):
     
     # LAYER 2: Anti-Bot Signature (Jo frontend se match hona chahiye)
-    if request.headers.get('X-Student-Engine-Key') != 'Cyrus_Secure_V1':
-        return JsonResponse({'status': 'error', 'message': 'Intrusion Detected! Blocked by Security.'}, status=403)
+    # if request.headers.get('X-Student-Engine-Key') != 'Cyrus_Secure_V1':
+    #     return JsonResponse({'status': 'error', 'message': 'Intrusion Detected! Blocked by Security.'}, status=403)
 
     # LAYER 3: Strict JSON Type validation
     if request.content_type != 'application/json':
