@@ -3,6 +3,8 @@ import math
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
 # ==========================================
 # 1. SMART CALCULATOR VIEWS
 # ==========================================
@@ -285,148 +287,161 @@ def calculate_gst(request):
 
     return JsonResponse({'status': 'error', 'error': 'Only POST method is allowed'}, status=405)
 
+@require_POST
 @csrf_exempt
 def calculate_physics(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            formula = data.get('formula')
-            
-            # Fetching up to 4 values, defaulting to 0 if not provided
-            val1 = float(data.get('val1', 0))
-            val2 = float(data.get('val2', 0))
-            val3 = float(data.get('val3', 0))
-            val4 = float(data.get('val4', 0)) # Specifically for Angle (theta) in Magnetic Force
-            
-            result = 0.0
+    
+    # LAYER 2: Anti-Bot Signature (Jo frontend se match hona chahiye)
+    if request.headers.get('X-Student-Engine-Key') != 'Cyrus_Secure_V1':
+        return JsonResponse({'status': 'error', 'message': 'Intrusion Detected! Blocked by Security.'}, status=403)
+
+    # LAYER 3: Strict JSON Type validation
+    if request.content_type != 'application/json':
+        return JsonResponse({'status': 'error', 'message': 'Invalid Data Format!'}, status=415)
+
+    try:
+        data = json.loads(request.body)
+        formula = data.get('formula')
+        
+        val1 = float(data.get('val1', 0))
+        val2 = float(data.get('val2', 0))
+        val3 = float(data.get('val3', 0))
+        val4 = float(data.get('val4', 0))
+        
+        # LAYER 4: DoS & Overflow Protection (Bohat bade numbers block karega)
+        max_limit = 10000000  # Max 1 Crore limit
+        if abs(val1) > max_limit or abs(val2) > max_limit or abs(val3) > max_limit:
+            return JsonResponse({'status': 'error', 'message': 'Values exceed safe server limits!'}, status=400)
+
+        result = 0.0
             
             # ==========================================
             # 1. IoT HARDWARE & SENSORS
             # ==========================================
-            if formula == 'ledResistor':
+        if formula == 'ledResistor':
                 # R = (Vs - Vf) / I
                 result = (val1 - val2) / val3 if val3 != 0 else 0
             
-            elif formula == 'vdiv':
+        elif formula == 'vdiv':
                 # Vout = Vin * (R2 / (R1 + R2))
                 result = val1 * (val3 / (val2 + val3)) if (val2 + val3) != 0 else 0
             
-            elif formula == 'adcConvert':
+        elif formula == 'adcConvert':
                 # Voltage = (ADC_Value * System_Voltage) / (Resolution - 1)
                 result = (val1 * val2) / (val3 - 1) if (val3 - 1) != 0 else 0
             
-            elif formula == 'battery':
+        elif formula == 'battery':
                 # Hours = Capacity (mAh) / Load (mA)
                 result = val1 / val2 if val2 != 0 else 0
                 
-            elif formula == 'energy':
+        elif formula == 'energy':
                 # E = Power * Time (Joules)
                 result = val1 * val2
 
             # ==========================================
             # 2. BASIC CIRCUITRY
             # ==========================================
-            elif formula == 'voltage':
+        elif formula == 'voltage':
                 # V = I * R
                 result = val1 * val2
             
-            elif formula == 'current':
+        elif formula == 'current':
                 # I = V / R
                 result = val1 / val2 if val2 != 0 else 0
             
-            elif formula == 'resistance':
+        elif formula == 'resistance':
                 # R = V / I
                 result = val1 / val2 if val2 != 0 else 0
             
-            elif formula == 'power':
+        elif formula == 'power':
                 # P = V * I
                 result = val1 * val2
 
             # ==========================================
             # 3. CAPACITANCE & ELECTROMAGNETISM
             # ==========================================
-            elif formula == 'rctime':
+        elif formula == 'rctime':
                 # tau = R * C
                 result = val1 * val2
                 
-            elif formula == 'charge':
+        elif formula == 'charge':
                 # Q = C * V
                 result = val1 * val2
                 
-            elif formula == 'transformer':
+        elif formula == 'transformer':
                 # Vs = Vp * (Ns / Np)
                 result = val1 * (val3 / val2) if val2 != 0 else 0
                 
-            elif formula == 'magneticForce':
+        elif formula == 'magneticForce':
                 # F = I * L * B * sin(theta)
                 result = val1 * val2 * val3 * math.sin(math.radians(val4))
 
             # ==========================================
             # 4. THERMODYNAMICS & ENVIRONMENT
             # ==========================================
-            elif formula == 'heat':
+        elif formula == 'heat':
                 # H = I^2 * R * t
                 result = (val1 ** 2) * val2 * val3
                 
-            elif formula == 'tempCF':
+        elif formula == 'tempCF':
                 # F = (C * 9/5) + 32
                 result = (val1 * 9/5) + 32
                 
-            elif formula == 'tempKC':
+        elif formula == 'tempKC':
                 # K = C + 273.15
                 result = val1 + 273.15
 
             # ==========================================
             # 5. MOTION, FORCES & ENERGY
             # ==========================================
-            elif formula == 'velocity':
+        elif formula == 'velocity':
                 # v = u + at
                 result = val1 + (val2 * val3)
                 
-            elif formula == 'distance':
+        elif formula == 'distance':
                 # s = ut + 1/2*a*t^2
                 result = (val1 * val3) + (0.5 * val2 * (val3 ** 2))
                 
-            elif formula == 'kineticEnergy':
+        elif formula == 'kineticEnergy':
                 # K.E = 1/2 * m * v^2
                 result = 0.5 * val1 * (val2 ** 2)
                 
-            elif formula == 'potentialEnergy':
+        elif formula == 'potentialEnergy':
                 # P.E = m * g * h
                 result = val1 * val2 * val3
                 
-            elif formula == 'basicPressure':
+        elif formula == 'basicPressure':
                 # P = F / A
                 result = val1 / val2 if val2 != 0 else 0
                 
-            elif formula == 'pressure':
+        elif formula == 'pressure':
                 # Hydrostatic P = rho * g * h
                 result = val1 * val2 * val3
 
             # ==========================================
             # 6. OPTICS & RF COMMUNICATION
             # ==========================================
-            elif formula == 'wavelength':
+        elif formula == 'wavelength':
                 # lambda = c / f (where c is speed of light: ~299,792,458 m/s)
                 result = 299792458 / val1 if val1 != 0 else 0
                 
-            elif formula == 'frequency':
+        elif formula == 'frequency':
                 # f = c / lambda
                 result = 299792458 / val1 if val1 != 0 else 0
                 
-            elif formula == 'illuminance':
+        elif formula == 'illuminance':
                 # E = I / d^2
                 result = val1 / (val2 ** 2) if val2 != 0 else 0
                 
             # Rounding result up to 4 decimals for a clean UI render
-            formatted_result = round(result, 4)
-            return JsonResponse({'status': 'success', 'result': formatted_result})
-            
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-            
-    return JsonResponse({'status': 'error', 'message': 'Invalid Request'}, status=400)
-
+        formatted_result = round(result, 4)
+        return JsonResponse({'status': 'success', 'result': formatted_result})
+        
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': 'Corrupted JSON Payload!'}, status=400)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': 'Internal Server Error.'}, status=500)
 
 def student_page(request):
     return render(request, 'content/student.html')
+       
