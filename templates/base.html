@@ -189,23 +189,23 @@
         }
 
         @media (max-width: 768px) {
-            .menu-toggle { display: block; font-size: 1.6rem; margin-right: 5px; }
+            .menu-toggle { display: block; font-size: 1.5rem; margin-right: 5px; }
             .sidebar { position: absolute; left: -320px; top: 0; background: rgba(10, 20, 35, 0.95); height: 100%; border-radius: 0; z-index: 200; }
             .layout-container { padding: 10px; gap: 0; }
             .sidebar.active { left: 0; }
             
-            /* Header fixes for mobile */
-            .top-header { padding: 0 10px; } 
-            .header-icon { height: 32px; width: 32px; } /* Smaller panda */
-            .main-title { font-size: 1rem; gap: 3px; letter-spacing: 0px; } /* Smaller text to fit screen */
-            .arrow-icon { font-size: 0.9rem; margin: 0 2px; }
-            .hide-mobile { display: none; }
+            /* Header fixes for mobile - Sab kuch fit karne ke liye adjust kiya */
+            .top-header { padding: 0 8px; justify-content: space-between; } 
+            .header-icon { height: 28px; width: 28px; } /* Panda aur Bee dono ke liye perfect size */
+            .main-title { font-size: 0.85rem; gap: 3px; letter-spacing: 0px; } /* Text ko chota kiya taaki dono image aa sakein */
+            .arrow-icon { font-size: 0.8rem; margin: 0 1px; }
         }
 
         /* Extra fix for very small screens like iPhone SE (375px width) */
         @media (max-width: 400px) {
-            .main-title { font-size: 0.85rem; }
-            .menu-toggle { margin-right: 0px; }
+            .main-title { font-size: 0.75rem; gap: 2px; }
+            .header-icon { height: 24px; width: 24px; }
+            .menu-toggle { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -219,7 +219,7 @@
             <span class="text-for">FOR</span> <span class="arrow-icon">➔</span> 
             <span class="text-everyone">EVERYONE</span>
         </h1>
-        <img src="https://cdn-icons-png.flaticon.com/512/809/809052.png" alt="Bee" class="header-icon hide-mobile">
+        <img src="https://cdn-icons-png.flaticon.com/512/809/809052.png" alt="Bee" class="header-icon">
     </header>
 
     <div class="layout-container">
