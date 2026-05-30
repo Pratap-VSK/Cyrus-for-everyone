@@ -29,7 +29,7 @@ SECRET_KEY = secret_key
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [ 'Pritam96Anaconda.pythonanywhere.com' ]
+ALLOWED_HOSTS = [ 'pritam96anaconda.pythonanywhere.com' ]
 
 
 # Application definition

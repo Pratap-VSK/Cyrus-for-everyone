@@ -1,5 +1,6 @@
 import json
 import math
+import sympy as sp
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -290,10 +291,6 @@ def calculate_gst(request):
 @require_POST
 @csrf_exempt
 def calculate_physics(request):
-    
-    # LAYER 2: Anti-Bot Signature (Jo frontend se match hona chahiye)
-    # if request.headers.get('X-Student-Engine-Key') != 'Cyrus_Secure_V1':
-    #     return JsonResponse({'status': 'error', 'message': 'Intrusion Detected! Blocked by Security.'}, status=403)
 
     # LAYER 3: Strict JSON Type validation
     if request.content_type != 'application/json':
@@ -436,7 +433,229 @@ def calculate_physics(request):
             # Rounding result up to 4 decimals for a clean UI render
         formatted_result = round(result, 4)
         return JsonResponse({'status': 'success', 'result': formatted_result})
+
+        # ==================================================================
+        # NEWTON'S CLASSICAL MECHANICS & KINEMATICS
+        # ==================================================================
+        #1. First Equation  of motion (v=u+at)
+        elif formula == 'motionFirst':
+            u = get_val('val1')
+            a = get_val('val2')
+            t = get_val('val3')
+            result = u + (a*t)
+            result_str = f"{result: .4g}"
+
+        #2. second equastion of motion (s = ut + 0.5at^2)
+
+        elif formula == 'motionSecond':
+            u = get_val('val1')
+            t = get_val('val2')
+            a = get_val('val3')
+            result = (u * t) + (0.5 * a * (t **2))
+            result_str = f"(result: .4g)"
+
+        #3. Third Equation of motion(v^2 = a^2 + 2as)
         
+        elif formula == 'motionThird':
+            u = get_val('val1')
+            a = get_val('val2')
+            s = get_val('val3')
+            result = (u ** 2) + (2 * a * s)
+            if val < 0:
+                return = math.sqrt(val)
+            result_str = f"(result: .4g)"
+
+        #4. Force (F = ma)
+        
+        elif formula == 'motionSecond':
+            m = get_val('val1')
+            a = get_val('val2')
+            result = m * a
+            result_str = f"(result: .4g)"
+
+        #5. Momentum rate (F = dp/dt)
+
+        elif formula == 'momentumRate':
+            dp = get_val('val1')
+            dt = get_val('val2')
+            if dt == 0:
+                return JsonResponse({'status': 'error', 'massage': 'Time derivative (dt) cannot be zero.'})
+            result = dp / dt
+            result_str = f"{result: .4g}"
+
+        #6. Gravitation Force (F = G * m1 * m2 / r^2)
+        elif formula == 'newtonGravity':
+            m1 = get_val('val1')
+            m2 = get_val('val2')
+            r = get_val('val3')
+            if r = 0:
+                 return JsonResponse({'status': 'error','massage': 'Distance(r) cannot be zero.'})
+            G = 6.67430e-11
+            result = G * (m1 * m2) / (r ** 2)
+            result_str = f"{result: .4e}"
+
+        #7.Newton's Law of Cooling (Rate = -k(T - T_env))
+
+        elif formula == 'newtonCooling':
+            k = get_val('val1')
+            T = get_val('val2')
+            T_env = get_val('val3')
+            result = -k * (T - T_env)
+            result_str = f"{result: .4g}"
+
+        #8. Newton's Law of Viscosity (tau = mu * (du/dy))
+        elif formula == 'newtonViscosity':
+            mu = get_val('val1')
+            du = get_val('val2')
+            dy = get_val('val3')
+            if dy == 0:
+                return JsonResponse({'status': 'error','massage': 'Layer Distance(dy) cannot be zero.'})
+            result = mu * (du / dy)
+            result_str = f"{result: .4g}"
+        
+        #9 Newton's Lens Equation ( f = sqrt(x1 * x2))
+        elif formula == 'newtonLens':
+            x1 = get_val('val1')
+            x2 = get_val('val2')
+            if x1 * x2 < 0:
+                return JsonResponse({'status': 'error', 'massage': 'Product of Distance cannot be negitive.'})
+            result = math.sqrt(x1 * x2)
+            result_str = f"{result: .4g}"
+
+        #10. Coefficient of Restitution (e = (v2 -v1) / (u1 -u2))
+        elif formula == 'newtonRestitution':
+            v1 = get_val('val1')
+            v2 = get_val('val2')
+            u1 = get_val('val3')
+            u2 = get_val('val4')
+            if (u1 - u2) == 0:
+                return JsonResponse({'status': 'error','massage': 'Initial relative velocity cannot be zero.'})
+            result = (v2 - v1) / (u1 -u2)
+            result_str =f"{result: .4g}"
+
+        #11. Weight on earth ( W = mg)
+        elif formula == 'newtonWeight':
+            m = get_val('val1')
+            g = 9.81 # Standard  gravity on Earth
+            result = m * g
+            result_str = f"{result: .4g}"
+
+        #12. Work Done (W = F * s * cos(theta))
+        elif formula == 'newtonWork':
+            F = get_val('val1')
+            s = get_val('val2')
+            theta = get_val('val3') # Angle in degrees 
+            # Math module user randians, so converting degrees to radians
+            radians = math.radians(theta)
+            result = F * s * math.cos(radians)
+            result_str = f"{result: .4g}"
+
+        #13. Velocity of sound (v = sqrt(P / rho))
+        elif formula == 'newtonSound':
+            p = get_val('val1')
+            rho = get_val('val2')
+            if rho <= 0:
+                return JsonResponse({'status': 'error','massage': 'Density (rho) must be Srtictly possitive.'})
+            result = math.sqrt(p / rho)
+            result_str = f"{result: .4g}"
+
+# ==============================================================
+#         -:LAPLACE MATHEMATICS: LAPLACE TRANSFORM :-
+# ==============================================================
+        elif formula == 'laplaceTransform':
+            # val1 expects a string mathematical equation in terms of 't' (e.g., "t**2", "sin(t)")
+            expr_str = data.get('val1', '')
+                
+            if not expr_str:
+                return JsonResponse({'status': 'error', 'message': 'Mathematical expression cannot be empty.'})
+                
+            try:
+                # Define the time domain (t) and frequency domain (s) symbols
+                t, s = sp.symbols('t s')
+                    
+                # Convert the string input into a SymPy readable symbolic expression
+                f_t = sp.sympify(expr_str)
+                    
+                # Compute the Laplace Transform
+                # noconds=True ensures it returns only the F(s) formula, not convergence conditions
+                laplace_result = sp.laplace_transform(f_t, t, s, noconds=True)
+                    
+                # Format the final expression as a string to send back to the frontend
+                result_str = str(laplace_result)
+                    
+            except Exception as e:    
+                return JsonResponse({'status': 'error', 'message': f'Invalid mathematical expression format. Ensure you use standard Python syntax (e.g., 2*t instead of 2t). Error details: {str(e)}'})
+        
+
+# ======================================================================
+#      -:LAPLACE TRANSFORM: ADVACED THEOREMS:-
+# ======================================================================
+        # 2. iNVERSE Laplace Transform (s -> t)
+        elif formula == 'inverseLaplace':
+            # val1 expects a string mathematical equation in term of 's' (e.g., "1/(s**2 + 1)")
+            expr_str = data.get('val1', '')
+
+            if not expr_str:
+                return JsonResponse({'status': 'error', 'massage': 'Expression for F(s) cannot be empty.'})
+            try:
+                t, s = sp.symbols('t s')
+                F_s = sp.sympyfy(expr_str)
+
+                # Compute the Inverse Laplace Transform
+                result = sp.inverse_laplace_transform(F_s, s, t)
+                result_str = str(result)
+
+            except exception as e:
+                return JsonResponse({'status': 'error','massage': ' f"Invalid mathmatical format. Error details: {str(e)} .'})
+
+            # =================================
+            #     first shiting theorem
+            # =================================
+
+        # 3. First shifting theorem (L{e^(at) * f(t)})
+        elif formula == 'laplaceShifting':
+            expr_str = data.get('val1', '')
+            a_val = get_val('val2')
+            if not expr_str:
+                return JsonResponse({'status': 'error','massage': ' Expression for f(t) cannot be empty .'})
+            try:
+                t, s = sp.symbols('t s')
+                f_t = sp.sympyfy(expr_str)
+                
+                # Multiply by  exponential component internally
+                shifted_f_t = f_t * sp.exp(a_val * t)
+
+                result = sp.laplace_transform(shifted_f_t, t, s, noconds=true)
+                result_str = str(result)
+            except exception as e:
+                return JsonResponse({'status': 'error','massage': {str(e)} })
+
+            # =====================================
+            #      -:LAPLACE DERIVATIVE:-
+            # =====================================
+        # 4. Laplace Transform of a First  Derivative (L{f'(t)} )
+        elif formula == 'laplaceDerivative':
+
+            expr_str = data.get('val1', '')
+            f_0 = get_val('val2')
+            if not expr_str:
+                return JsonResponse({'status': 'error','massage': 'Expression for f(t) cannot be empty.'})
+            try:
+                t, s = sp.symbols('t s')
+                f_t = sp.sympyfy(expr_str)
+
+                #Compute Laplace of the original functionF(s)
+                F_s = sp.laplace_transform(F_t, t, s, noconds=true)
+
+                #Apply the derivative theorem-> s*F(s)
+                raw_result = (s * F_s) - f_0
+
+                #simplify the mathematical equation for a clear output
+                result = sp.simplify(raw_result)
+                result_str = str(result)
+            except Exception as e:
+                return JsonResponse({'status': 'error','massage': {str(e)}})
+
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Corrupted JSON Payload!'}, status=400)
     except Exception as e:
