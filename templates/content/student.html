@@ -139,7 +139,7 @@
     .custom-options::-webkit-scrollbar-thumb { background: #eab308; border-radius: 10px; }
 
     /* =========================================
-       3. INPUTS & RESULTS
+       3. INPUTS & RESULTS (WITH OVERFLOW FIX)
        ========================================= */
     .input-box {
         background: rgba(0, 0, 0, 0.4);
@@ -159,7 +159,6 @@
 
     .input-box:focus { border-color: #eab308; }
 
-    /* PC par 2 columns left-right */
     #dynamic-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     .full-width { grid-column: span 2; }
 
@@ -177,7 +176,18 @@
         box-sizing: border-box;
     }
 
-    .result-value { color: #eab308; font-size: 2.2rem; font-weight: 800; text-shadow: 0 0 10px rgba(234, 179, 8, 0.3); }
+    /* 🔥 THE FIX: Word-wrap and responsive font size added here */
+    .result-value { 
+        color: #eab308; 
+        font-size: clamp(1.2rem, 4vw, 2.2rem); 
+        font-weight: 800; 
+        text-shadow: 0 0 10px rgba(234, 179, 8, 0.3); 
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        word-break: break-all;
+        max-width: 100%;
+    }
+
     .result-unit { color: #cbd5e1; font-size: 0.9rem; margin-top: 5px; }
 
     .btn-submit { 
@@ -200,44 +210,14 @@
        4. MOBILE RESPONSIVENESS FIXES
        ========================================= */
     @media (max-width: 768px) {
-        .page-wrapper {
-            flex-direction: column;
-            padding: 10px;
-            gap: 15px;
-        }
-        .conv-container {
-            width: 100%;
-            padding: 20px; 
-            max-width: 100%;
-        }
-        
-        .attractive-visual {
-            display: none; 
-        }
-
-        #dynamic-inputs { 
-            grid-template-columns: 1fr 1fr; 
-            gap: 10px; 
-        }
-        
-        .input-box { 
-            margin-bottom: 5px; 
-            padding: 10px;
-            font-size: 0.9rem;
-        }
-
-        .section-label {
-            font-size: 0.75rem;
-        }
-        
+        .page-wrapper { flex-direction: column; padding: 10px; gap: 15px; }
+        .conv-container { width: 100%; padding: 20px; max-width: 100%; }
+        .attractive-visual { display: none; }
+        #dynamic-inputs { grid-template-columns: 1fr 1fr; gap: 10px; }
+        .input-box { margin-bottom: 5px; padding: 10px; font-size: 0.9rem; }
+        .section-label { font-size: 0.75rem; }
         .custom-select-wrapper { margin-bottom: 15px; }
-        
-        .result-box {
-            padding: 15px;
-            margin-bottom: 15px;
-            min-height: 80px;
-        }
-        
+        .result-box { padding: 15px; margin-bottom: 15px; min-height: 80px; }
         .conv-title { font-size: 1.4rem; margin-bottom: 10px; }
     }
 </style>
@@ -254,6 +234,30 @@
                 <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: #eab308;"></i>
             </div>
             <div class="custom-options">
+                <div class="optgroup-label">Newton's Mechanics & Gravity</div>
+                <div class="custom-option" data-value="motionFirst">1st Eq of Motion (v)</div>
+                <div class="custom-option" data-value="motionSecond">2nd Eq of Motion (s)</div>
+                <div class="custom-option" data-value="motionThird">3rd Eq of Motion (v²)</div>
+                <div class="custom-option" data-value="newtonForce">Newton's Force (F=ma)</div>
+                <div class="custom-option" data-value="momentumRate">Momentum Rate (dp/dt)</div>
+                <div class="custom-option" data-value="newtonGravity">Gravitational Force (F)</div>
+                <div class="custom-option" data-value="newtonWeight">Weight on Earth (W)</div>
+                <div class="custom-option" data-value="newtonWork">Work Done (W)</div>
+                <div class="custom-option" data-value="newtonCooling">Newton's Cooling Rate</div>
+                <div class="custom-option" data-value="newtonViscosity">Fluid Viscosity (τ)</div>
+                <div class="custom-option" data-value="newtonLens">Lens Equation (f)</div>
+                <div class="custom-option" data-value="newtonRestitution">Restitution Coeff (e)</div>
+                <div class="custom-option" data-value="newtonSound">Speed of Sound (v)</div>
+
+                <div class="optgroup-label">Advanced Math (Laplace)</div>
+                <div class="custom-option" data-value="laplaceTransform">Laplace Transform L{f(t)}</div>
+                <div class="custom-option" data-value="inverseLaplace">Inverse Laplace L⁻¹{F(s)}</div>
+                <div class="custom-option" data-value="laplaceShifting">First Shifting Theorem</div>
+                <div class="custom-option" data-value="laplaceDerivative">Laplace of Derivative</div>
+                <div class="custom-option" data-value="laplaceSecondDerivative">Laplace 2nd Derivative</div>
+                <div class="custom-option" data-value="laplaceMultiplyByT">Multiplication by tⁿ</div>
+                <div class="custom-option" data-value="laplaceIntegral">Laplace of Integral</div>
+
                 <div class="optgroup-label">IoT Hardware & Power</div>
                 <div class="custom-option" data-value="ledResistor">LED Resistor Calc (R)</div>
                 <div class="custom-option" data-value="vdiv">Voltage Divider (Vout)</div>
@@ -266,28 +270,6 @@
                 <div class="custom-option" data-value="current">Current (I = V ÷ R)</div>
                 <div class="custom-option" data-value="resistance">Resistance (R = V ÷ I)</div>
                 <div class="custom-option" data-value="power">Electrical Power (P = V × I)</div>
-
-                <div class="optgroup-label">Electromagnetism & Waves</div>
-                <div class="custom-option" data-value="rctime">RC Time Constant (τ)</div>
-                <div class="custom-option" data-value="charge">Capacitor Charge (Q)</div>
-                <div class="custom-option" data-value="transformer">Transformer Ratio (Vs)</div>
-                <div class="custom-option" data-value="magneticForce">Magnetic Force (F)</div>
-                <div class="custom-option" data-value="wavelength">RF Wavelength (λ)</div>
-                <div class="custom-option" data-value="frequency">RF Frequency (f)</div>
-
-                <div class="optgroup-label">Mechanics & Force</div>
-                <div class="custom-option" data-value="velocity">Final Velocity (v)</div>
-                <div class="custom-option" data-value="distance">Displacement (s)</div>
-                <div class="custom-option" data-value="kineticEnergy">Kinetic Energy (K.E)</div>
-                <div class="custom-option" data-value="potentialEnergy">Potential Energy (P.E)</div>
-                <div class="custom-option" data-value="basicPressure">Basic Pressure (P = F÷A)</div>
-                <div class="custom-option" data-value="pressure">Hydrostatic Pressure (Pa)</div>
-
-                <div class="optgroup-label">Thermodynamics & Optics</div>
-                <div class="custom-option" data-value="heat">Joule's Heating (H = I²Rt)</div>
-                <div class="custom-option" data-value="tempCF">Celsius to Fahrenheit (°F)</div>
-                <div class="custom-option" data-value="tempKC">Celsius to Kelvin (K)</div>
-                <div class="custom-option" data-value="illuminance">Illuminance (Lux)</div>
             </div>
         </div>
 
@@ -306,13 +288,38 @@
 
     <div class="attractive-visual">
         <h3 id="visualTitle">Physics Matrix</h3>
-        <p id="visualDesc">Select a physical parameter to begin high-precision server-side computation. Integrated logic for IoT hardware, motion dynamics, and circuits.</p>
+        <p id="visualDesc">Select a physical parameter to begin high-precision server-side computation. Integrated logic for IoT hardware, motion dynamics, advanced mathematics, and circuitry.</p>
         <div class="visual-icon"><i class="fas fa-atom"></i></div>
     </div>
 </div>
 
 <script>
     const formulas = {
+        // --- NEWTON MODULE ---
+        motionFirst: { title: "Final Velocity", unit: "m/s", inputs: [{ id: "val1", label: "INITIAL VEL (u)", placeholder: "m/s" }, { id: "val2", label: "ACCEL (a)", placeholder: "m/s²" }, { id: "val3", label: "TIME (t)", placeholder: "s" }] },
+        motionSecond: { title: "Displacement", unit: "Meters (m)", inputs: [{ id: "val1", label: "INITIAL VEL (u)", placeholder: "m/s" }, { id: "val2", label: "TIME (t)", placeholder: "s" }, { id: "val3", label: "ACCEL (a)", placeholder: "m/s²" }] },
+        motionThird: { title: "Final Velocity", unit: "m/s", inputs: [{ id: "val1", label: "INITIAL VEL (u)", placeholder: "m/s" }, { id: "val2", label: "ACCEL (a)", placeholder: "m/s²" }, { id: "val3", label: "DISTANCE (s)", placeholder: "m" }] },
+        newtonForce: { title: "Force (F=ma)", unit: "Newtons (N)", inputs: [{ id: "val1", label: "MASS (kg)", placeholder: "kg" }, { id: "val2", label: "ACCEL (a)", placeholder: "m/s²" }] },
+        momentumRate: { title: "Force via Momentum", unit: "Newtons (N)", inputs: [{ id: "val1", label: "CHANGE (dp)", placeholder: "kg.m/s" }, { id: "val2", label: "TIME (dt)", placeholder: "s" }] },
+        newtonGravity: { title: "Gravitational Force", unit: "Newtons (N)", inputs: [{ id: "val1", label: "MASS 1", placeholder: "kg", full: true }, { id: "val2", label: "MASS 2", placeholder: "kg" }, { id: "val3", label: "DISTANCE (r)", placeholder: "m" }] },
+        newtonWeight: { title: "Weight on Earth", unit: "Newtons (N)", inputs: [{ id: "val1", label: "MASS", placeholder: "kg", full: true }] },
+        newtonWork: { title: "Work Done", unit: "Joules (J)", inputs: [{ id: "val1", label: "FORCE (F)", placeholder: "N", full: true }, { id: "val2", label: "DISPLACEMENT", placeholder: "m" }, { id: "val3", label: "ANGLE (θ)", placeholder: "degrees" }] },
+        newtonCooling: { title: "Cooling Rate", unit: "°C/s", inputs: [{ id: "val1", label: "CONSTANT (k)", placeholder: "k", full: true }, { id: "val2", label: "OBJECT TEMP", placeholder: "°C" }, { id: "val3", label: "ENV TEMP", placeholder: "°C" }] },
+        newtonViscosity: { title: "Shear Stress", unit: "Pa", inputs: [{ id: "val1", label: "VISCOSITY (μ)", placeholder: "Pa.s", full: true }, { id: "val2", label: "VELOCITY DIFF", placeholder: "m/s" }, { id: "val3", label: "LAYER DIST", placeholder: "m" }] },
+        newtonLens: { title: "Focal Length", unit: "Meters (m)", inputs: [{ id: "val1", label: "DISTANCE (x1)", placeholder: "m" }, { id: "val2", label: "DISTANCE (x2)", placeholder: "m" }] },
+        newtonRestitution: { title: "Elasticity", unit: "Ratio (e)", inputs: [{ id: "val1", label: "FINAL VEL 1 (v1)", placeholder: "m/s" }, { id: "val2", label: "FINAL VEL 2 (v2)", placeholder: "m/s" }, { id: "val3", label: "INIT VEL 1 (u1)", placeholder: "m/s" }, { id: "val4", label: "INIT VEL 2 (u2)", placeholder: "m/s" }] },
+        newtonSound: { title: "Speed of Sound", unit: "m/s", inputs: [{ id: "val1", label: "PRESSURE (P)", placeholder: "Pa" }, { id: "val2", label: "DENSITY (ρ)", placeholder: "kg/m³" }] },
+
+        // --- LAPLACE MODULE ---
+        laplaceTransform: { title: "Laplace Transform", unit: "F(s)", inputs: [{ id: "val1", label: "FUNCTION f(t)", placeholder: "e.g. t**2 or sin(t)", type: "text", full: true }] },
+        inverseLaplace: { title: "Inverse Laplace", unit: "f(t)", inputs: [{ id: "val1", label: "FUNCTION F(s)", placeholder: "e.g. 1/s**2", type: "text", full: true }] },
+        laplaceShifting: { title: "First Shifting", unit: "F(s-a)", inputs: [{ id: "val1", label: "BASE FUNCTION f(t)", placeholder: "e.g. cos(t)", type: "text", full: true }, { id: "val2", label: "EXPONENT a", placeholder: "in e^(at)", type: "number" }] },
+        laplaceDerivative: { title: "Derivative Theorem", unit: "Symbolic", inputs: [{ id: "val1", label: "FUNCTION f(t)", placeholder: "e.g. t**3", type: "text", full: true }, { id: "val2", label: "INIT COND f(0)", placeholder: "Value", type: "number" }] },
+        laplaceSecondDerivative: { title: "2nd Derivative", unit: "Symbolic", inputs: [{ id: "val1", label: "FUNCTION f(t)", placeholder: "e.g. sin(t)", type: "text", full: true }, { id: "val2", label: "f(0)", placeholder: "Value", type: "number" }, { id: "val3", label: "f'(0)", placeholder: "Value", type: "number" }] },
+        laplaceMultiplyByT: { title: "Multiply by tⁿ", unit: "Symbolic", inputs: [{ id: "val1", label: "BASE FUNCTION f(t)", placeholder: "e.g. exp(t)", type: "text" }, { id: "val2", label: "POWER (n)", placeholder: "Integer", type: "number" }] },
+        laplaceIntegral: { title: "Integral Theorem", unit: "F(s)/s", inputs: [{ id: "val1", label: "FUNCTION f(t)", placeholder: "e.g. t*exp(t)", type: "text", full: true }] },
+
+        // --- ORIGINAL MODULES ---
         ledResistor: { title: "Required Resistor", unit: "Ohms (Ω)", inputs: [{ id: "val1", label: "SOURCE VOLTAGE", placeholder: "Vs" }, { id: "val2", label: "LED VOLTAGE", placeholder: "Vf" }, { id: "val3", label: "LED CURRENT", placeholder: "Amps" }] },
         vdiv: { title: "Output Voltage", unit: "Volts (V)", inputs: [{ id: "val1", label: "INPUT VOLTAGE", placeholder: "Vin", full: true }, { id: "val2", label: "RESISTOR 1", placeholder: "R1" }, { id: "val3", label: "RESISTOR 2", placeholder: "R2" }] },
         adcConvert: { title: "Sensor Voltage", unit: "Volts (V)", inputs: [{ id: "val1", label: "ADC VALUE", placeholder: "e.g. 512", full: true }, { id: "val2", label: "SYSTEM VOLTAGE", placeholder: "e.g. 3.3" }, { id: "val3", label: "RESOLUTION", placeholder: "e.g. 1024" }] },
@@ -321,23 +328,7 @@
         voltage: { title: "Voltage", unit: "Volts (V)", inputs: [{ id: "val1", label: "CURRENT (I)", placeholder: "Amps" }, { id: "val2", label: "RESISTANCE (R)", placeholder: "Ohms" }] },
         current: { title: "Current", unit: "Amps (A)", inputs: [{ id: "val1", label: "VOLTAGE (V)", placeholder: "Volts" }, { id: "val2", label: "RESISTANCE (R)", placeholder: "Ohms" }] },
         resistance: { title: "Resistance", unit: "Ohms (Ω)", inputs: [{ id: "val1", label: "VOLTAGE (V)", placeholder: "Volts" }, { id: "val2", label: "CURRENT (I)", placeholder: "Amps" }] },
-        power: { title: "Power", unit: "Watts (W)", inputs: [{ id: "val1", label: "VOLTAGE (V)", placeholder: "Volts" }, { id: "val2", label: "CURRENT (I)", placeholder: "Amps" }] },
-        rctime: { title: "Time Constant", unit: "Seconds (s)", inputs: [{ id: "val1", label: "RESISTANCE (R)", placeholder: "Ohms" }, { id: "val2", label: "CAPACITANCE (C)", placeholder: "Farads" }] },
-        charge: { title: "Charge (Q)", unit: "Coulombs (C)", inputs: [{ id: "val1", label: "CAPACITANCE (C)", placeholder: "Farads" }, { id: "val2", label: "VOLTAGE (V)", placeholder: "Volts" }] },
-        transformer: { title: "Secondary Volts", unit: "Volts (V)", inputs: [{ id: "val1", label: "PRIMARY VOLTS", placeholder: "Vp", full: true }, { id: "val2", label: "PRIMARY TURNS", placeholder: "Np" }, { id: "val3", label: "SECONDARY TURNS", placeholder: "Ns" }] },
-        magneticForce: { title: "Magnetic Force", unit: "Newtons (N)", inputs: [{ id: "val1", label: "CURRENT (I)", placeholder: "A" }, { id: "val2", label: "LENGTH (L)", placeholder: "m" }, { id: "val3", label: "FIELD (B)", placeholder: "T" }, { id: "val4", label: "ANGLE (θ)", placeholder: "deg" }] },
-        wavelength: { title: "Wavelength", unit: "Meters (m)", inputs: [{ id: "val1", label: "FREQUENCY (f)", placeholder: "Hz", full: true }] },
-        frequency: { title: "Frequency", unit: "Hertz (Hz)", inputs: [{ id: "val1", label: "WAVELENGTH (λ)", placeholder: "Meters", full: true }] },
-        velocity: { title: "Final Velocity", unit: "m/s", inputs: [{ id: "val1", label: "INITIAL (u)", placeholder: "m/s", full: true }, { id: "val2", label: "ACCEL (a)", placeholder: "m/s²" }, { id: "val3", label: "TIME (t)", placeholder: "s" }] },
-        distance: { title: "Displacement", unit: "Meters (m)", inputs: [{ id: "val1", label: "INITIAL (u)", placeholder: "m/s", full: true }, { id: "val2", label: "ACCEL (a)", placeholder: "m/s²" }, { id: "val3", label: "TIME (t)", placeholder: "s" }] },
-        kineticEnergy: { title: "Kinetic Energy", unit: "Joules (J)", inputs: [{ id: "val1", label: "MASS (m)", placeholder: "kg" }, { id: "val2", label: "VELOCITY (v)", placeholder: "m/s" }] },
-        potentialEnergy: { title: "Potential Energy", unit: "Joules (J)", inputs: [{ id: "val1", label: "MASS (m)", placeholder: "kg", full: true }, { id: "val2", label: "GRAVITY (g)", placeholder: "9.8" }, { id: "val3", label: "HEIGHT (h)", placeholder: "m" }] },
-        basicPressure: { title: "Pressure", unit: "Pascals (Pa)", inputs: [{ id: "val1", label: "FORCE (F)", placeholder: "Newtons" }, { id: "val2", label: "AREA (A)", placeholder: "m²" }] },
-        pressure: { title: "Hydrostatic Pressure", unit: "Pa", inputs: [{ id: "val1", label: "DENSITY (ρ)", placeholder: "kg/m³", full: true }, { id: "val2", label: "GRAVITY (g)", placeholder: "m/s²" }, { id: "val3", label: "DEPTH (h)", placeholder: "m" }] },
-        heat: { title: "Generated Heat", unit: "Joules (J)", inputs: [{ id: "val1", label: "CURRENT (I)", placeholder: "A", full: true }, { id: "val2", label: "RESISTANCE (R)", placeholder: "Ω" }, { id: "val3", label: "TIME (t)", placeholder: "s" }] },
-        tempCF: { title: "Fahrenheit", unit: "°F", inputs: [{ id: "val1", label: "TEMPERATURE (°C)", placeholder: "Celsius", full: true }] },
-        tempKC: { title: "Kelvin", unit: "K", inputs: [{ id: "val1", label: "TEMPERATURE (°C)", placeholder: "Celsius", full: true }] },
-        illuminance: { title: "Illuminance", unit: "Lux", inputs: [{ id: "val1", label: "INTENSITY (I)", placeholder: "Candelas" }, { id: "val2", label: "DISTANCE (d)", placeholder: "m" }] }
+        power: { title: "Power", unit: "Watts (W)", inputs: [{ id: "val1", label: "VOLTAGE (V)", placeholder: "Volts" }, { id: "val2", label: "CURRENT (I)", placeholder: "Amps" }] }
     };
 
     const wrapper = document.getElementById('customSelectWrapper');
@@ -359,6 +350,7 @@
         };
     });
 
+    // Dynamic input generation with support for text and number types
     function generateInputs() {
         const config = formulas[hiddenInput.value];
         const container = document.getElementById('dynamic-inputs');
@@ -371,28 +363,39 @@
             if (inp.full || config.inputs.length === 1) {
                 div.className = 'full-width';
             }
-            div.innerHTML = `<label class="section-label">${inp.label}</label><input type="number" step="any" id="${inp.id}" class="input-box" placeholder="${inp.placeholder}">`;
+            
+            const inputType = inp.type || "number";
+            const stepAttr = inputType === "number" ? 'step="any"' : '';
+            
+            div.innerHTML = `<label class="section-label">${inp.label}</label><input type="${inputType}" ${stepAttr} id="${inp.id}" class="input-box" placeholder="${inp.placeholder}">`;
             container.appendChild(div);
         });
     }
 
     async function calculateResultBackend() {
         const selection = hiddenInput.value;
-        if(!selection) return alert("Bhai, pehle koi module choose karo!");
+        if(!selection) return alert("Please select a target module first.");
         const config = formulas[selection];
         
         const payload = { formula: selection };
         let err = false;
 
         config.inputs.forEach(inp => {
-            let v = parseFloat(document.getElementById(inp.id).value);
-            if (isNaN(v)) err = true;
-            payload[inp.id] = v;
+            let val = document.getElementById(inp.id).value;
+            const inputType = inp.type || "number";
+            
+            if (inputType === "number") {
+                let v = parseFloat(val);
+                if (isNaN(v)) err = true;
+                payload[inp.id] = v;
+            } else {
+                if (!val || val.trim() === '') err = true;
+                payload[inp.id] = val;
+            }
         });
 
-        if (err) return alert("Sare required fields bharna zaroori hai!");
+        if (err) return alert("All required fields must be filled with valid data.");
 
-        // DOM se CSRF Token ko uthana
         const csrfTokenElement = document.querySelector('[name=csrfmiddlewaretoken]');
         const csrftoken = csrfTokenElement ? csrfTokenElement.value : '';
 
@@ -401,7 +404,6 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Asli Django Security Token bheja jaa raha hai
                     'X-CSRFToken': csrftoken 
                 },
                 body: JSON.stringify(payload)
@@ -412,11 +414,11 @@
                 document.getElementById('mainResult').innerText = data.result;
                 document.getElementById('subResult').innerText = `${config.title} (${config.unit})`;
             } else {
-                alert("Error: " + data.message);
+                alert("Server Execution Error: " + data.message);
             }
         } catch (e) { 
             console.error(e); 
-            alert("Backend se connect nahi ho paya!");
+            alert("Failed to establish a connection with the backend engine.");
         }
     }
 </script>
