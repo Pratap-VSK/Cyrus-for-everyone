@@ -633,7 +633,7 @@ def calculate_physics(request):
             # =====================================
             #      -:LAPLACE DERIVATIVE:-
             # =====================================
-        # 4. Laplace Transform of a First  Derivative (L{f'(t)} )
+    # 4. Laplace Transform of a First  Derivative (L{f'(t)} )
         elif formula == 'laplaceDerivative':
 
             expr_str = data.get('val1', '')
@@ -655,6 +655,84 @@ def calculate_physics(request):
                 result_str = str(result)
             except Exception as e:
                 return JsonResponse({'status': 'error','massage': {str(e)}})
+
+
+        # 5. Laplace Transform of a Second Derivative ( L{f''(t)} )
+            elif formula == 'laplaceSecondDerivative':
+                import sympy as sp
+                
+                expr_str = data.get('val1', '') # The original function f(t)
+                f_0 = get_val('val2')           # Initial condition f(0) (e.g., initial position)
+                f_prime_0 = get_val('val3')     # Initial condition f'(0) (e.g., initial velocity)
+                
+                if not expr_str:
+                    return JsonResponse({'status': 'error', 'message': 'Expression for f(t) cannot be empty.'})
+                
+                try:
+                    t, s = sp.symbols('t s')
+                    f_t = sp.sympify(expr_str)
+                    
+                    # Step 1: Compute baseline F(s)
+                    F_s = sp.laplace_transform(f_t, t, s, noconds=True)
+                    
+                    # Step 2: Apply the 2nd derivative theorem -> s^2*F(s) - s*f(0) - f'(0)
+                    raw_result = (s**2 * F_s) - (s * f_0) - f_prime_0
+                    result = sp.simplify(raw_result)
+                    result_str = str(result)
+                    
+                except Exception as e:
+                    return JsonResponse({'status': 'error', 'message': str(e)})
+
+            # 6. Multiplication by t^n ( L{t^n * f(t)} )
+            elif formula == 'laplaceMultiplyByT':
+                import sympy as sp
+                
+                expr_str = data.get('val1', '') # Base function f(t)
+                n_val = int(get_val('val2', 1)) # The power 'n' of t^n (default is 1)
+                
+                if not expr_str:
+                    return JsonResponse({'status': 'error', 'message': 'Expression for f(t) cannot be empty.'})
+                
+                try:
+                    t, s = sp.symbols('t s')
+                    f_t = sp.sympify(expr_str)
+                    
+                    # Compute base F(s)
+                    F_s = sp.laplace_transform(f_t, t, s, noconds=True)
+                    
+                    # Apply the multiplication theorem: (-1)^n * (d^n / ds^n) F(s)
+                    derivative_Fs = sp.diff(F_s, s, n_val)
+                    raw_result = ((-1)**n_val) * derivative_Fs
+                    
+                    result = sp.simplify(raw_result)
+                    result_str = str(result)
+                    
+                except Exception as e:
+                    return JsonResponse({'status': 'error', 'message': str(e)})
+
+            # 7. Laplace Transform of an Integral
+            elif formula == 'laplaceIntegral':
+                import sympy as sp
+                
+                expr_str = data.get('val1', '') # Function inside the integral f(t)
+                
+                if not expr_str:
+                    return JsonResponse({'status': 'error', 'message': 'Expression for f(t) cannot be empty.'})
+                
+                try:
+                    t, s = sp.symbols('t s')
+                    f_t = sp.sympify(expr_str)
+                    
+                    # Compute base F(s)
+                    F_s = sp.laplace_transform(f_t, t, s, noconds=True)
+                    
+                    # Apply integral theorem: F(s) / s
+                    raw_result = F_s / s
+                    result = sp.simplify(raw_result)
+                    result_str = str(result)
+                    
+                except Exception as e:
+                    return JsonResponse({'status': 'error', 'message': str(e)})
 
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Corrupted JSON Payload!'}, status=400)
